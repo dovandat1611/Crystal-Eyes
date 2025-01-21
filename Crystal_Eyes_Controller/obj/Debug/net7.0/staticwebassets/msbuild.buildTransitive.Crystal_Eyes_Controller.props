@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Crystal_Eyes_Controller.props" />
+</Project>

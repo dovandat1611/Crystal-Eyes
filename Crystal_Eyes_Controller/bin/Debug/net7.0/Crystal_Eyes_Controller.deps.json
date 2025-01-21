@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Crystal_Eyes_Controller/1.0.0": {
+        "runtime": {
+          "Crystal_Eyes_Controller.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Crystal_Eyes_Controller/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
