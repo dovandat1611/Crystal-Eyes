@@ -2,3 +2,93 @@
     ViewData["Title"] = "Crytal Eyes | Đơn hàng của bạn";
     Layout = "_CustomerLayout";
 }
+
+<div class="container">
+	<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+		<a href="/" class="stext-109 cl8 hov-cl1 trans-04">
+			Trang Chủ
+			<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+		</a>
+		<a href="/customer/profile" class="stext-109 cl8 hov-cl1 trans-04">
+			Thông tin tài khoản
+			<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+		</a>
+		<span class="stext-109 cl4">
+			Đơn hàng của bạn
+		</span>
+	</div>
+</div>
+
+<section class="intro p-t-65 p-b-60">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12">
+				<div class="card custom-rounded-s-small">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-hover mb-0">
+								<thead>
+									<tr>
+										<th>Tên người nhận</th>
+										<th>Số điện thoại</th>
+										<th>Địa chỉ</th>
+										<th>Tổng giá trị đơn hàng</th>
+										<th>Trạng thái</th>
+										<th>Chi tiết</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Ashin</td>
+										<td>
+											<a href="tel:1234">012345</a>
+										</td>
+										<td>Đại học FPT</td>
+										<td>300.00VNĐ</td>
+										<td>
+											<!-- <span class="text-danger bg-white bor1 p-all-5">
+												Hủy
+											</span>
+											<span class="text-info bg-white bor1 p-all-5">
+												Đang chuẩn bị hàng
+											</span>
+											<span class="text-warning bg-white bor1 p-all-5">
+												Đang vận chuyển
+											</span> -->
+											<span class="text-success bg-white bor1 p-all-5">
+												Thành công
+											</span>
+										</td>
+										<td>
+											<button class="flex-c-m   cl0 bg1 bor1 hov-btn1  p-all-5 trans-04">
+												Xem chi tiết
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<div class="flex-l-m flex-w w-full p-t-10 m-lr--7 justify-content-center">
+								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+									<i class="zmdi zmdi-arrow-left"></i>
+								</a>
+								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+									1
+								</a>
+
+								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
+									2
+								</a>
+								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+									<i class="zmdi zmdi-arrow-right"></i>
+								</a>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
