@@ -28,52 +28,52 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcRWRpdFByb2ZpbGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/ForgotPassword.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcRm9yZ290UGFzc3dvcmQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/HistoryOrder.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcSGlzdG9yeU9yZGVyLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/OrderDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcT3JkZXJEZXRhaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/OTP.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcT1RQLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/ProductDetail.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcUHJvZHVjdERldGFpbC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcUHJvZmlsZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/Register.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcUmVnaXN0ZXIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/ResetPassword.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcUmVzZXRQYXNzd29yZC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/Shop.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcU2hvcC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Customer/Wishlist.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcV2lzaGxpc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/OTP.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxPVFAuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/ProductDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcm9kdWN0RGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZXNldFBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Home/Shop.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTaG9wLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/MyProjectSoftware/Crystal_Eyes/Crystal_Eyes_Controller/Views/Shared/_CustomerLayout.cshtml]
