@@ -2,7 +2,7 @@
     ViewData["Title"] = "Crytal Eyes | Đăng nhập";
     Layout = "_CustomerLayout";
 }
-
+@model LoginViewModel
 
 <!-- breadcrumb -->
 <div class="container">
@@ -24,18 +24,31 @@
 		<div class="d-flex justify-content-center align-items-center">
 
 			<div class="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md custom-rounded-s-small ">
-				<form>
+				<form asp-action="Login" method="post">
 					<h4 class="mtext-105 cl2 txt-center p-b-30">
 						Thông tin đăng nhập
 					</h4>
-
+					<!-- Hiển thị lỗi chung -->
+					@if (!ViewData.ModelState.IsValid)
+					{
+						<div class="text-danger d-flex justify-content-center align-items-center m-b-10">
+							@Html.ValidationMessage("LoginFail")
+						</div>
+					}
 					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
-						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" required
-							   placeholder="Email*" name="email">
+						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
+							   placeholder="Email*" asp-for="Email">
+					</div>
+					<div class="text-danger m-b-10">
+						<span asp-validation-for="Email"></span>
 					</div>
 					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
-						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" required
-							   placeholder="Mật khẩu*" name="password">
+						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="password" 
+							   placeholder="Mật khẩu*" asp-for="Password">
+						
+					</div>
+					<div class="text-danger m-b-10">
+						<span asp-validation-for="Password"></span>
 					</div>
 
 					<!-- Thêm liên kết Quên mật khẩu -->

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "2oy50h6SFnGDQGJJiUkbTCWLeIgVPUPRs4wFuocEXnuuvKSMuaaqTK8DpLRKVUmw4PjHRVBw6zUf1YLxKzkmzQ==",
+  "dgSpecHash": "tkez9Bl/xKVwpybevquYxi7avRP10wSzjzB9oNWTT+UNj/VfYJqakwYT7QT9UDRz1O8ue2ntJUEnZHtanpL8Xw==",
   "success": true,
   "projectFilePath": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\Crystal_Eyes_Controller.csproj",
   "expectedPackageFiles": [
@@ -23,6 +23,7 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\7.0.0\\microsoft.entityframeworkcore.tools.7.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.configuration\\7.0.0\\microsoft.extensions.configuration.7.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
