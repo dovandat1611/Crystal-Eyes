@@ -35,6 +35,15 @@
 							@Html.ValidationMessage("LoginFail")
 						</div>
 					}
+
+					<!-- Hiển thị thông báo -->
+					@if (TempData["RegisterSuccess"] != null)
+					{
+						<div class="alert alert-success justify-content-center align-items-center m-b-10">
+							@TempData["RegisterSuccess"]
+						</div>
+					}
+
 					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
 						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30"
 							   placeholder="Email*" asp-for="Email">
