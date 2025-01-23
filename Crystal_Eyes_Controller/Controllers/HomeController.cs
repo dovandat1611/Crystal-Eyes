@@ -1,5 +1,4 @@
-﻿using Crystal_Eyes_Controller.Dtos;
-using Crystal_Eyes_Controller.IRepositories;
+﻿using Crystal_Eyes_Controller.IRepositories;
 using Crystal_Eyes_Controller.IServices;
 using Crystal_Eyes_Controller.Models;
 using Crystal_Eyes_Controller.Utils;
@@ -9,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Numerics;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Crystal_Eyes_Controller.Dtos.Authentication;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
