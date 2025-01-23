@@ -1,27 +1,30 @@
 ﻿using Crystal_Eyes_Controller.Dtos;
+using Crystal_Eyes_Controller.IRepositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
     public class HomeController : Controller
     {
-		public HomeController()
+		private readonly IUserRepository _userRepository;
+
+		public HomeController(IUserRepository userRepository)
         {
+			_userRepository = userRepository;
         }
-		public bool checkLogin()
+
+		public bool IsUserLoggedIn()
 		{
-			bool checkL = true;
-			var httpContext = HttpContext;
-			if (httpContext != null)
-			{
-				string isCustomerAuthenticated = httpContext.Request.Cookies["customer"];
-				if (string.IsNullOrEmpty(isCustomerAuthenticated))
-				{
-					checkL = false;
-				}
-			}
-			return checkL;
+			var customerCookie = HttpContext?.Request.Cookies["account"];
+			return !string.IsNullOrEmpty(customerCookie);
+		}
+
+		public string GetEmailUserLogin()
+		{
+			var customerCookie = HttpContext?.Request.Cookies["account"];
+			return !string.IsNullOrEmpty(customerCookie) ? customerCookie : string.Empty;
 		}
 
 		public IActionResult Index()
@@ -44,29 +47,75 @@ namespace Crystal_Eyes_Controller.Controllers
 		[HttpGet("logout")]
 		public IActionResult Logout()
 		{
-			HttpContext.Response.Cookies.Delete("customer");
+			if (IsUserLoggedIn())
+			{
+				HttpContext.Response.Cookies.Delete("customer");
+			}
 			return RedirectToAction("Login", "Customer");
 		}
 
 		[HttpGet("login")]
 		public IActionResult Login()
 		{
-			ViewData["IsLogin"] = checkLogin();
+			if (IsUserLoggedIn())
+			{
+				return RedirectToAction("Index", "Home");
+			}
 			return View();
 		}
 
 		[HttpPost("login")]
-		public IActionResult Login(LoginViewModel model)
+		public async Task<IActionResult> Login(LoginViewModel model)
 		{
-			ViewData["IsLogin"] = checkLogin();
+			var query = await _userRepository.QueryableAsync();
+
+			if (IsUserLoggedIn())
+			{
+				var email = GetEmailUserLogin();
+				var userLoggedIn = await query.FirstOrDefaultAsync(x => x.Email == email);
+				if (userLoggedIn == null)
+				{
+					return RedirectToAction("Login", "Account");
+				}
+				if (userLoggedIn.RoleName == "Admin")
+				{
+					return RedirectToAction("Dashboard", "Admin");
+				}
+				return RedirectToAction("Index", "Home");
+			}
+
 			if (!ModelState.IsValid)
 			{
 				return View(model);
 			}
-			if (model.Email == "admin@example.com" && model.Password == "password123")
-			{
-				HttpContext.Response.Cookies.Append("customer", "true");
-				return RedirectToAction("Index", "Home");
+
+			var user = await query.Where(x => x.Email == model.Email && x.Password == model.Password).SingleOrDefaultAsync();
+
+			if(user != null)
+			{	
+				if(user.IsVerify == false)
+				{
+					ModelState.AddModelError("LoginFail", "Tài khoản bạn chưa xác thực. Vui lòng kiểm tra email");
+					return View(model);
+				}
+				if(user.IsActive == false)
+				{
+					ModelState.AddModelError("LoginFail", "Tài khoản của bạn đã bị khóa");
+					return View(model);
+				}
+
+				if(user.RoleName == "Customer")
+				{
+					HttpContext.Response.Cookies.Append("customer", user.Email);
+					return RedirectToAction("Index", "Home");
+				}
+
+				if(user.RoleName == "Admin")
+				{
+					HttpContext.Response.Cookies.Append("admin", user.Email);
+					return RedirectToAction("Dashboard", "Admin");
+				}
+				return View(model);
 			}
 
 			ModelState.AddModelError("LoginFail", "Email hoặc mật khẩu không đúng");
@@ -76,14 +125,12 @@ namespace Crystal_Eyes_Controller.Controllers
 		[HttpGet("register")]
 		public IActionResult Register()
 		{
-			ViewData["IsLogin"] = checkLogin();
 			return View();
 		}
 
 		[HttpPost("register")]
 		public IActionResult Register(RegisterViewModel model)
 		{
-			ViewData["IsLogin"] = checkLogin();
 			return View();
 		}
 

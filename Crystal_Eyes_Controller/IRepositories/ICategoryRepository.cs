@@ -2,7 +2,7 @@
 
 namespace Crystal_Eyes_Controller.IRepositories
 {
-	public interface ICartItemRepository : IGenericRepository<CartItem>
+	public interface ICategoryRepository : IGenericRepository<Category>
 	{
 	}
 }

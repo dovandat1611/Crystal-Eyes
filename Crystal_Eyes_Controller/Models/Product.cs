@@ -5,35 +5,39 @@ namespace Crystal_Eyes_Controller.Models;
 
 public partial class Product
 {
-    public int ProductId { get; set; }
+	public int ProductId { get; set; }
 
-    public string Name { get; set; } = null!;
+	public int? CategoryId { get; set; }
 
-    public string? MainImage { get; set; }
+	public string Name { get; set; } = null!;
 
-    public decimal Price { get; set; }
+	public string? MainImage { get; set; }
 
-    public decimal? Discount { get; set; }
+	public decimal Price { get; set; }
 
-    public string? SubDescription { get; set; }
+	public decimal? Discount { get; set; }
 
-    public string? Description { get; set; }
+	public string? SubDescription { get; set; }
 
-    public string? AddInfo { get; set; }
+	public string? Description { get; set; }
 
-    public bool? IsActive { get; set; }
+	public string? AddInfo { get; set; }
 
-    public bool? IsDelete { get; set; }
+	public bool? IsActive { get; set; }
 
-    public virtual ICollection<CartItem> CartItems { get; } = new List<CartItem>();
+	public bool? IsDelete { get; set; }
 
-    public virtual ICollection<Color> Colors { get; } = new List<Color>();
+	public virtual ICollection<Cart> Carts { get; } = new List<Cart>();
 
-    public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
+	public virtual Category? Category { get; set; }
 
-    public virtual ICollection<Image> Images { get; } = new List<Image>();
+	public virtual ICollection<Color> Colors { get; } = new List<Color>();
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
+	public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
 
-    public virtual ICollection<Wishlist> Wishlists { get; } = new List<Wishlist>();
+	public virtual ICollection<Image> Images { get; } = new List<Image>();
+
+	public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
+
+	public virtual ICollection<Wishlist> Wishlists { get; } = new List<Wishlist>();
 }

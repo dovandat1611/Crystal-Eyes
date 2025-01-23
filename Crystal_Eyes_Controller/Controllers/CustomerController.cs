@@ -8,9 +8,7 @@ namespace Crystal_Eyes_Controller.Controllers
 	{
 		public CustomerController()
 		{
-
 		}
-
 		public bool checkLogin()
 		{
 			bool checkL = true;
