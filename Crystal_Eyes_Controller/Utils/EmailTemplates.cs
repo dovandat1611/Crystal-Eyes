@@ -2,5 +2,12 @@
 {
 	public class EmailTemplates
 	{
+		public static string Verify(string name, string encryptionId)
+		{
+
+			return $@"
+			";
+
+		}
 	}
 }

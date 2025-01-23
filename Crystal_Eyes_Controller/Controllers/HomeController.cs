@@ -1,6 +1,9 @@
 ﻿using Crystal_Eyes_Controller.Dtos;
 using Crystal_Eyes_Controller.IRepositories;
+using Crystal_Eyes_Controller.IServices;
 using Crystal_Eyes_Controller.Models;
+using Crystal_Eyes_Controller.Utils;
+using Crystal_Eyes_Controller.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -13,12 +16,14 @@ namespace Crystal_Eyes_Controller.Controllers
     {
 		private readonly IUserRepository _userRepository;
 		private readonly ICustomerRepository _customerRepository;
+		private readonly IMailSystemService _mailSystemService;
 
 
-		public HomeController(IUserRepository userRepository, ICustomerRepository customerRepository)
+	   public HomeController(IUserRepository userRepository, ICustomerRepository customerRepository, IMailSystemService mailSystemService)
         {
 			_userRepository = userRepository;
 			_customerRepository = customerRepository;
+			_mailSystemService = mailSystemService;
         }
 
 		public bool IsUserLoggedIn()
@@ -111,9 +116,9 @@ namespace Crystal_Eyes_Controller.Controllers
 			}
 
 			var query = await _userRepository.QueryableAsync();
-			var user = await query.Where(x => x.Email == model.Email && x.Password == model.Password).FirstOrDefaultAsync();
+			var user = await query.Where(x => x.Email == model.Email).FirstOrDefaultAsync();
 
-			if(user != null)
+			if(user != null && BCrypt.Net.BCrypt.Verify(model.Password, user.Password) == true)
 			{	
 				if(user.IsVerify == false)
 				{
@@ -165,7 +170,7 @@ namespace Crystal_Eyes_Controller.Controllers
 			var newUser = new User
 			{
 				Email = model.Email,
-				Password = model.Password, 
+				Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
 				RoleName = "Customer",
 				IsActive = true,
 				IsVerify = true,
@@ -180,6 +185,7 @@ namespace Crystal_Eyes_Controller.Controllers
 
 				var newCustomer = new Customer
 				{
+					UserId = addUser.UserId,
 					Name = model.Name,
 					Phone = model.Phone,
 					Dob = model.Dob,
@@ -188,9 +194,10 @@ namespace Crystal_Eyes_Controller.Controllers
 
 				var addCustomer = await _customerRepository.CreateAndReturnAsync(newCustomer);
 
-				if(newCustomer != null)
+				if(addCustomer != null)
 				{
-					// gửi email ở đây
+					// SEND EMAIL
+					await _mailSystemService.SendEmailAsync(addUser.Email, Constants.Email_Subject.VERIFY, EmailTemplates.Verify(addCustomer.Name, AesEncryption.Encrypt(addCustomer.UserId.ToString())));
 
 					TempData["RegisterSuccess"] = "Vui lòng check email để verify tài khoản";
 					return RedirectToAction("Login", "Home");

@@ -1,7 +1,10 @@
+using Crystal_Eyes_Controller.Dtos.Email;
 using Crystal_Eyes_Controller.IRepositories;
+using Crystal_Eyes_Controller.IServices;
 using Crystal_Eyes_Controller.Mapper;
 using Crystal_Eyes_Controller.Models;
 using Crystal_Eyes_Controller.Repositories;
+using Crystal_Eyes_Controller.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,15 +19,14 @@ builder.Services.AddDbContext<CrystalEyesDbContext>(options =>
 
 builder.Services.AddDistributedMemoryCache();
 
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
 builder.Services.AddSession(options =>
 {
 	options.IdleTimeout = TimeSpan.FromDays(1);
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 });
-
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-
 
 // REPOSITORIES: Scoped
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
@@ -41,6 +43,16 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IUserOtpRepository, UserOtpRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
+
+// SERVICE: ASK CHAT GPT
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<IMailSystemService, MailSystemService>();
+builder.Services.AddTransient<IExcelService, ExcelService>();
+
+
+// Configure MailSettings
+var mailSettingsSection = builder.Configuration.GetSection("MailSettings");
+builder.Services.Configure<MailSettings>(mailSettingsSection); // register for dependency 
 
 var app = builder.Build();
 
