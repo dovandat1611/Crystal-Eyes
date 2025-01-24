@@ -5,6 +5,7 @@ using Crystal_Eyes_Controller.Mapper;
 using Crystal_Eyes_Controller.Models;
 using Crystal_Eyes_Controller.Repositories;
 using Crystal_Eyes_Controller.Services;
+using Crystal_Eyes_Controller.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,26 +29,13 @@ builder.Services.AddSession(options =>
 	options.Cookie.IsEssential = true;
 });
 
-// REPOSITORIES: Scoped
-builder.Services.AddScoped<IAdminRepository, AdminRepository>();
-builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IColorRepository, ColorRepository>();
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<IExternalLoginRepository, ExternalLoginRepository>();
-builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
-builder.Services.AddScoped<IImageRepository, ImageRepository>();
-builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IUserOtpRepository, UserOtpRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
-
-// SERVICE: ASK CHAT GPT
+// REPOSITORIES
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+// SERVICE
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<IMailSystemService, MailSystemService>();
-builder.Services.AddTransient<IExcelService, ExcelService>();
+builder.Services.AddScoped<IExcelService, ExcelService>();
 
 
 // Configure MailSettings

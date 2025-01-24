@@ -8,6 +8,12 @@
 			public static string ADMIN = "Admin";
 		}
 
+		public class Default_Avatar
+		{
+			public static string CUSTOMER = "https://res.cloudinary.com/do9iyczi3/image/upload/v1728023034/default-avatar-profile-icon_ecq8w3.jpg";
+		}
+
+
 		public class Email_Subject
 		{
 			public static string VERIFY = "Xác Thực Email - Crystal Eyes";

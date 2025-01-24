@@ -9,21 +9,21 @@ using System.Diagnostics;
 using System.Numerics;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Crystal_Eyes_Controller.Dtos.Authentication;
+using Crystal_Eyes_Controller.UnitOfWork;
+using Crystal_Eyes_Controller.Repositories;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
     public class HomeController : Controller
     {
-		private readonly IUserRepository _userRepository;
-		private readonly ICustomerRepository _customerRepository;
-		private readonly IMailSystemService _mailSystemService;
+		private readonly IUnitOfWork _unitOfWork;
+		private readonly IAuthenticationService _authenticationService;
 
-
-	   public HomeController(IUserRepository userRepository, ICustomerRepository customerRepository, IMailSystemService mailSystemService)
+	   public HomeController(IUnitOfWork unitOfWork, IAuthenticationService authenticationService)
         {
-			_userRepository = userRepository;
-			_customerRepository = customerRepository;
-			_mailSystemService = mailSystemService;
+			_unitOfWork = unitOfWork;
+			_authenticationService = authenticationService;
         }
 
 		public bool IsUserLoggedIn()
@@ -40,10 +40,9 @@ namespace Crystal_Eyes_Controller.Controllers
 
 		private async Task<IActionResult> HandleAuthenticatedUserRedirect(string actionName, string controllerName)
 		{
-			var query = await _userRepository.QueryableAsync();
 			var email = GetEmailUserLogin();
 
-			var userLoggedIn = await query.FirstOrDefaultAsync(x => x.Email == email);
+			var userLoggedIn = await _unitOfWork.User.Queryable().FirstOrDefaultAsync(x => x.Email == email);
 			if (userLoggedIn == null)
 			{
 				return RedirectToAction(actionName, controllerName);
@@ -84,6 +83,8 @@ namespace Crystal_Eyes_Controller.Controllers
 			return RedirectToAction("Login", "Customer");
 		}
 
+
+
 		[HttpGet("login")]
 		public async Task<IActionResult> Login()
 		{
@@ -115,8 +116,7 @@ namespace Crystal_Eyes_Controller.Controllers
 				return View(model);
 			}
 
-			var query = await _userRepository.QueryableAsync();
-			var user = await query.Where(x => x.Email == model.Email).FirstOrDefaultAsync();
+			var user = await _unitOfWork.User.Queryable().Where(x => x.Email == model.Email).FirstOrDefaultAsync();
 
 			if(user != null && BCrypt.Net.BCrypt.Verify(model.Password, user.Password) == true)
 			{	
@@ -149,17 +149,25 @@ namespace Crystal_Eyes_Controller.Controllers
 			return View(model);
 		}
 
+		[HttpGet("verify-account")]
+		public async Task<IActionResult> Verify(string code)
+		{
+			var result = await _authenticationService.VerifyAsync(code);
+			ViewBag.Message = result.Message;
+			ViewBag.IsSuccess = result.IsSuccess;
+			return View();
+		}
+
 
 		[HttpPost("register")]
 		public async Task<IActionResult> Register(RegisterViewModel model)
 		{
 			if (!ModelState.IsValid)
 			{
-				return View(model); 
+				return View(model);
 			}
 
-			var query = await _userRepository.QueryableAsync();
-			var existingUser = await query.Where(x => x.Email == model.Email).FirstOrDefaultAsync();
+			var existingUser = await _unitOfWork.User.Queryable().Where(x => x.Email == model.Email).FirstOrDefaultAsync();
 
 			if (existingUser != null)
 			{
@@ -167,48 +175,15 @@ namespace Crystal_Eyes_Controller.Controllers
 				return View(model);
 			}
 
-			var newUser = new User
+			var result = await _authenticationService.RegisterAsync(model);
+
+			if (result.IsSuccess)
 			{
-				Email = model.Email,
-				Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
-				RoleName = "Customer",
-				IsActive = true,
-				IsVerify = true,
-				CreatedAt = DateTime.UtcNow,
-				IsExternalLogin = false
-			};
-
-			var addUser =  await _userRepository.CreateAndReturnAsync(newUser); 
-
-			if(addUser != null)
-			{
-
-				var newCustomer = new Customer
-				{
-					UserId = addUser.UserId,
-					Name = model.Name,
-					Phone = model.Phone,
-					Dob = model.Dob,
-					Address = model.Address
-				};
-
-				var addCustomer = await _customerRepository.CreateAndReturnAsync(newCustomer);
-
-				if(addCustomer != null)
-				{
-					// SEND EMAIL
-					await _mailSystemService.SendEmailAsync(addUser.Email, Constants.Email_Subject.VERIFY, EmailTemplates.Verify(addCustomer.Name, AesEncryption.Encrypt(addCustomer.UserId.ToString())));
-
-					TempData["RegisterSuccess"] = "Vui lòng check email để verify tài khoản";
-					return RedirectToAction("Login", "Home");
-				}
-
-				ModelState.AddModelError("RegisterFail", "Đăng ký tài khoản thành công nhưng đăng ký khách hàng đang xảy ra lỗi");
-				return View(model);
-
+				TempData["RegisterSuccess"] = result.Message;
+				return RedirectToAction("Login", "Home");
 			}
 
-			ModelState.AddModelError("RegisterFail", "Đăng ký tài khoản đang xảy ra lỗi");
+			ModelState.AddModelError("RegisterFail", result.Message);
 			return View(model);
 		}
 
