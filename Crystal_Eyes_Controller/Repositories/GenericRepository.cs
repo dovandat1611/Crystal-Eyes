@@ -2,7 +2,6 @@
 using Crystal_Eyes_Controller.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Crystal_Eyes_Controller.Repositories
 {
 	public class GenericRepository<T> : IGenericRepository<T> where T : class
@@ -14,107 +13,38 @@ namespace Crystal_Eyes_Controller.Repositories
 			_dbContext = dbContext;
 		}
 
-		public async Task<IQueryable<T>> QueryableAsync()
+		// Trả về IQueryable để hỗ trợ truy vấn linh hoạt
+		public IQueryable<T> Queryable()
 		{
-			return await Task.FromResult(_dbContext.Set<T>().AsQueryable());
+			return _dbContext.Set<T>().AsQueryable();
 		}
 
+		// Thêm một thực thể
 		public async Task<bool> CreateAsync(T entity)
 		{
-			if (entity == null)
-				return false;
+			if (entity == null) return false;
 
-			using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-			{
-				try
-				{
-					await _dbContext.Set<T>().AddAsync(entity);
-					int result = await _dbContext.SaveChangesAsync();
-
-					await transaction.CommitAsync(); // Commit nếu không có lỗi
-					return result > 0;
-				}
-				catch (Exception)
-				{
-					await transaction.RollbackAsync(); // Rollback khi có lỗi
-					throw;
-				}
-			}
+			await _dbContext.Set<T>().AddAsync(entity);
+			return await _dbContext.SaveChangesAsync() > 0;
 		}
 
+		// Thêm một thực thể và trả về thực thể sau khi thêm
 		public async Task<T> CreateAndReturnAsync(T entity)
 		{
-			using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-			{
-				try
-				{
-					await _dbContext.Set<T>().AddAsync(entity);
-					await _dbContext.SaveChangesAsync();
+			if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-					await transaction.CommitAsync(); // Commit sau khi thành công
-					return entity;
-				}
-				catch (Exception)
-				{
-					await transaction.RollbackAsync(); // Rollback nếu có lỗi
-					throw;
-				}
-			}
+			await _dbContext.Set<T>().AddAsync(entity);
+			await _dbContext.SaveChangesAsync();
+			return entity;
 		}
 
-		public async Task<bool> DeleteAsync(int id)
-		{
-			using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-			{
-				try
-				{
-					var entity = await _dbContext.Set<T>().FindAsync(id);
-					if (entity == null)
-						return false;
-
-					_dbContext.Set<T>().Remove(entity);
-					int result = await _dbContext.SaveChangesAsync();
-
-					await transaction.CommitAsync(); // Commit sau khi xoá thành công
-					return result > 0;
-				}
-				catch (Exception)
-				{
-					await transaction.RollbackAsync(); // Rollback khi có lỗi
-					throw;
-				}
-			}
-		}
-
-
-		public async Task<bool> DeleteRangeAsync(List<T> entities)
-		{
-			if (entities == null || !entities.Any())
-				return false;
-
-			using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-			{
-				try
-				{
-					_dbContext.Set<T>().RemoveRange(entities); // Xoá danh sách các thực thể
-					int result = await _dbContext.SaveChangesAsync();
-
-					await transaction.CommitAsync(); // Commit sau khi xoá thành công
-					return result > 0;
-				}
-				catch (Exception)
-				{
-					await transaction.RollbackAsync(); // Rollback khi có lỗi
-					throw;
-				}
-			}
-		}
-
+		// Lấy tất cả các thực thể
 		public async Task<IEnumerable<T>> GetAllAsync()
 		{
 			return await _dbContext.Set<T>().ToListAsync();
 		}
 
+		// Lấy một thực thể theo ID
 		public async Task<T> GetByIdAsync(int id)
 		{
 			var entity = await _dbContext.Set<T>().FindAsync(id);
@@ -123,50 +53,45 @@ namespace Crystal_Eyes_Controller.Repositories
 			{
 				throw new KeyNotFoundException($"Entity with ID {id} was not found.");
 			}
+
 			return entity;
 		}
 
-		public async Task<bool> UpdateAsync(T entity)
+		// Xóa một thực thể theo ID
+		public async Task<bool> DeleteAsync(int id)
 		{
-			using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-			{
-				try
-				{
-					_dbContext.Set<T>().Update(entity);
-					int result = await _dbContext.SaveChangesAsync();
+			var entity = await _dbContext.Set<T>().FindAsync(id);
+			if (entity == null) return false;
 
-					await transaction.CommitAsync(); // Commit sau khi cập nhật thành công
-					return result > 0;
-				}
-				catch (Exception)
-				{
-					await transaction.RollbackAsync(); // Rollback khi có lỗi
-					throw;
-				}
-			}
+			_dbContext.Set<T>().Remove(entity);
+			return await _dbContext.SaveChangesAsync() > 0;
 		}
 
-		public async Task<bool> CreateRangeAsync(List<T> entities)
+		// Xóa nhiều thực thể
+		public async Task<bool> DeleteRangeAsync(IEnumerable<T> entities)
 		{
-			if (entities == null || entities.Count == 0)
-				return false;
+			if (entities == null || !entities.Any()) return false;
 
-			using (var transaction = await _dbContext.Database.BeginTransactionAsync())
-			{
-				try
-				{
-					await _dbContext.Set<T>().AddRangeAsync(entities);
-					int result = await _dbContext.SaveChangesAsync();
+			_dbContext.Set<T>().RemoveRange(entities);
+			return await _dbContext.SaveChangesAsync() > 0;
+		}
 
-					await transaction.CommitAsync(); // Commit nếu thành công
-					return result > 0;
-				}
-				catch (Exception)
-				{
-					await transaction.RollbackAsync(); // Rollback khi có lỗi
-					throw;
-				}
-			}
+		// Cập nhật một thực thể
+		public async Task<bool> UpdateAsync(T entity)
+		{
+			if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+			_dbContext.Set<T>().Update(entity);
+			return await _dbContext.SaveChangesAsync() > 0;
+		}
+
+		// Thêm nhiều thực thể
+		public async Task<bool> CreateRangeAsync(IEnumerable<T> entities)
+		{
+			if (entities == null || !entities.Any()) return false;
+
+			await _dbContext.Set<T>().AddRangeAsync(entities);
+			return await _dbContext.SaveChangesAsync() > 0;
 		}
 	}
 }
