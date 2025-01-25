@@ -15,6 +15,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static System.Net.WebRequestMethods;
 using Crystal_Eyes_Controller.Services;
 using Crystal_Eyes_Controller.Middleware;
+using AutoMapper;
+using Crystal_Eyes_Controller.Dtos.Cart;
+using Crystal_Eyes_Controller.Dtos.Product;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
@@ -24,19 +27,49 @@ namespace Crystal_Eyes_Controller.Controllers
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IAuthenticationService _authenticationService;
 		private readonly IMailSystemService _mailSystemService;
+		private readonly IMapper _mapper;
 
 
-		public HomeController(IUnitOfWork unitOfWork, IAuthenticationService authenticationService, IMailSystemService mailSystemService)
+		public HomeController(IUnitOfWork unitOfWork, IAuthenticationService authenticationService, IMailSystemService mailSystemService, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
 			_authenticationService = authenticationService;
 			_mailSystemService = mailSystemService;
+			_mapper = mapper;
 		}
 
-		public IActionResult Index()
+		[HttpGet]
+		public async Task<IActionResult> Index()
         {
+			var products = await _unitOfWork.Product.Queryable().ToListAsync();
+			var categories = await _unitOfWork.Category.Queryable().ToListAsync();
+
+			if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
+			{
+				int userId = int.Parse(ViewBag.UserId.ToString());
+
+				var carts = await _unitOfWork.Cart.Queryable().Include(x => x.Product).Where(x => x.UserId == userId).ToListAsync();
+
+				var cartsDto = _mapper.Map<List<CartViewDto>>(carts);
+
+				var totalAmount = cartsDto.Sum(x => x.TotalPrice);
+
+				ViewBag.Carts = cartsDto;
+				ViewBag.TotalAmount = totalAmount;
+			}
+
+			var productsDto = _mapper.Map<List<ProductViewDto>>(products);
+
+			ViewBag.Products = productsDto;
+			ViewBag.Categories = categories;
 			return View();
         }
+
+		[HttpPost]
+		public IActionResult Index(int id)
+		{
+			return View();
+		}
 
 		[HttpGet("shop")]
 		public IActionResult Shop()
@@ -45,8 +78,9 @@ namespace Crystal_Eyes_Controller.Controllers
 		}
 
 		[HttpGet("product-detail")]
-		public IActionResult ProductDetail()
+		public IActionResult ProductDetail(int id)
 		{
+
 			return View();
 		}
 
@@ -67,7 +101,7 @@ namespace Crystal_Eyes_Controller.Controllers
 		}
 
 		[HttpGet("register")]
-		public async Task<IActionResult> Register()
+		public IActionResult Register()
 		{
 			return View();
 		}

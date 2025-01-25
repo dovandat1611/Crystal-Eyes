@@ -12,7 +12,12 @@ namespace Crystal_Eyes_Controller.Middleware
             var httpContext = context.HttpContext;
 
             ViewBag.IsLoggedIn = httpContext.Items["IsLoggedIn"];
-        }
-    }
+			ViewBag.UserId = httpContext.Items["UserId"];
+			ViewBag.Email = httpContext.Items["Email"];
+			ViewBag.RoleName = httpContext.Items["RoleName"];
+			ViewBag.TotalCart = httpContext.Items["TotalCart"];
+			ViewBag.TotalWishList = httpContext.Items["TotalWishList"];
+		}
+	}
 
 }
