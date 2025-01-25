@@ -41,5 +41,42 @@
 			";
 
 		}
+
+		public static string OTP(string otp)
+		{
+			return $@"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+                    <title>Xác thực tài khoản</title>
+                </head>
+                <body style=""font-family: Arial, sans-serif;"">
+                    <div style=""margin: 20px auto; max-width: 600px; width: 100%; background-color: #ffffff; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); overflow: hidden; border-radius: 20px;"">
+                        <div style=""background-color: #000000; padding: 20px; text-align: center; color: #ffffff; font-size: 1.5rem; font-weight: bold;"">
+                            Mã OTP - Quên Mật Khẩu | <span style=""color: #ffffff;"">Crystal Eyes</span>
+                        </div>
+                        <div style=""padding: 20px; text-align: center; color: #666666;"">
+                            <div style=""background-color: #f4f4f4; padding: 20px; border-radius: 5px; box-shadow: 0 2px 8px rgba(8, 120, 211, 0.1); text-align: left;"">
+                                <br><br>
+                                <div style=""text-align: center;"">
+                                    <span style=""display: inline-block; font-size: 24px;background-color: rgb(25, 23, 23); color: #ffffff; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;"">
+                                        {otp}
+                                    </span>
+                                </div>
+                                <br><br>
+                                <p style=""text-align: center;"">Lưu ý: không được chia sẻ mã này cho bất cứ ai!</p>
+                            </div>
+                        </div>
+                        <div style=""background-color: #000000; padding: 10px; text-align: center; color: #ffffff; font-size: 0.875rem; font-weight: bold;"">
+                            © <script>document.write(new Date().getFullYear());</script> | Bản quyền thuộc về Crystal Eyes.
+                        </div>
+                    </div>
+                </body>
+                </html>            
+			";
+
+		}
+
 	}
 }

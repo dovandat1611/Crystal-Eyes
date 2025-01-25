@@ -12,53 +12,30 @@ using Crystal_Eyes_Controller.Dtos.Authentication;
 using Crystal_Eyes_Controller.UnitOfWork;
 using Crystal_Eyes_Controller.Repositories;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static System.Net.WebRequestMethods;
+using Crystal_Eyes_Controller.Services;
+using Crystal_Eyes_Controller.Middleware;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
-    public class HomeController : Controller
-    {
+    [CustomAuthorize]
+	public class HomeController : BaseController
+	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IAuthenticationService _authenticationService;
+		private readonly IMailSystemService _mailSystemService;
 
-	   public HomeController(IUnitOfWork unitOfWork, IAuthenticationService authenticationService)
-        {
+
+		public HomeController(IUnitOfWork unitOfWork, IAuthenticationService authenticationService, IMailSystemService mailSystemService)
+		{
 			_unitOfWork = unitOfWork;
 			_authenticationService = authenticationService;
-        }
-
-		public bool IsUserLoggedIn()
-		{
-			var customerCookie = HttpContext?.Request.Cookies["account"];
-			return !string.IsNullOrEmpty(customerCookie);
-		}
-
-		public string GetEmailUserLogin()
-		{
-			var customerCookie = HttpContext?.Request.Cookies["account"];
-			return !string.IsNullOrEmpty(customerCookie) ? customerCookie : string.Empty;
-		}
-
-		private async Task<IActionResult> HandleAuthenticatedUserRedirect(string actionName, string controllerName)
-		{
-			var email = GetEmailUserLogin();
-
-			var userLoggedIn = await _unitOfWork.User.Queryable().FirstOrDefaultAsync(x => x.Email == email);
-			if (userLoggedIn == null)
-			{
-				return RedirectToAction(actionName, controllerName);
-			}
-
-			if (userLoggedIn.RoleName == "Admin")
-			{
-				return RedirectToAction("Dashboard", "Admin");
-			}
-
-			return RedirectToAction("Index", "Home");
+			_mailSystemService = mailSystemService;
 		}
 
 		public IActionResult Index()
         {
-            return View();
+			return View();
         }
 
 		[HttpGet("shop")]
@@ -75,35 +52,23 @@ namespace Crystal_Eyes_Controller.Controllers
 
 		[HttpGet("logout")]
 		public IActionResult Logout()
-		{
-			if (IsUserLoggedIn())
+		{	
+			if(ViewBag.IsLoggedIn == true)
 			{
-				HttpContext.Response.Cookies.Delete("customer");
+				HttpContext.Response.Cookies.Delete("account");
 			}
-			return RedirectToAction("Login", "Customer");
+			return RedirectToAction("Login", "Home");
 		}
 
-
-
 		[HttpGet("login")]
-		public async Task<IActionResult> Login()
+		public IActionResult Login()
 		{
-			if (IsUserLoggedIn())
-			{
-				return await HandleAuthenticatedUserRedirect("Login", "Home");
-			}
-
 			return View();
 		}
 
 		[HttpGet("register")]
 		public async Task<IActionResult> Register()
 		{
-			if (IsUserLoggedIn())
-			{
-				return await HandleAuthenticatedUserRedirect("Register", "Home");
-			}
-
 			return View();
 		}
 
@@ -131,20 +96,18 @@ namespace Crystal_Eyes_Controller.Controllers
 					return View(model);
 				}
 
-				if(user.RoleName == "Customer")
+				HttpContext.Response.Cookies.Append("account", user.Email);
+
+				if (user.RoleName == "Customer")
 				{
-					HttpContext.Response.Cookies.Append("customer", user.Email);
 					return RedirectToAction("Index", "Home");
 				}
 
 				if(user.RoleName == "Admin")
 				{
-					HttpContext.Response.Cookies.Append("admin", user.Email);
 					return RedirectToAction("Dashboard", "Admin");
 				}
-				return View(model);
 			}
-
 			ModelState.AddModelError("LoginFail", "Email hoặc mật khẩu không đúng");
 			return View(model);
 		}
@@ -179,7 +142,7 @@ namespace Crystal_Eyes_Controller.Controllers
 
 			if (result.IsSuccess)
 			{
-				TempData["RegisterSuccess"] = result.Message;
+				TempData["MessageSuccess"] = result.Message;
 				return RedirectToAction("Login", "Home");
 			}
 
@@ -187,52 +150,143 @@ namespace Crystal_Eyes_Controller.Controllers
 			return View(model);
 		}
 
-		[HttpGet("otp")]
-		public async Task<IActionResult> OTP()
-		{
-			if (IsUserLoggedIn())
-			{
-				return await HandleAuthenticatedUserRedirect("Login", "Home");
-			}
 
-			// Check thêm nếu không có sesstion forgotpassword account thì làm gì... 
-
-			return View();
-		}
-
-		[HttpPost("otp")]
-		public async Task<IActionResult> OTP(int OTP)
-		{
-			return View();
-		}
 
 		[HttpGet("forgot-password")]
 		public async Task<IActionResult> ForgotPassword()
 		{
-			if (IsUserLoggedIn())
-			{
-				return await HandleAuthenticatedUserRedirect("ForgotPassword", "Home");
-			}
 			return View();
 		}
 
 		[HttpPost("forgot-password")]
-		public async Task<IActionResult> ForgotPassword(int account)
+		public async Task<IActionResult> ForgotPassword(string email)
 		{
+			if (string.IsNullOrEmpty(email))
+			{
+				ViewBag.Message = "Vui lòng nhập email!";
+				return View();
+			}
+
+			var user = await _unitOfWork.User.Queryable().FirstOrDefaultAsync(u => u.Email == email);
+
+			if (user == null)
+			{
+				ViewBag.Message = "Email không tồn tại trong hệ thống!";
+				return View();
+			}
+
+			var otp = new Random().Next(100000, 999999).ToString(); 
+
+			var otpEntity = new UserOtp
+			{
+				UserId = user.UserId,
+				OtpCode = otp,
+				ExpiresAt = DateTime.UtcNow.AddMinutes(10), 
+				IsUse = false
+			};
+
+			await _unitOfWork.UserOtp.CreateAsync(otpEntity);
+			await _unitOfWork.SaveChangesAsync();
+
+			await _mailSystemService.SendEmailAsync(
+				email,
+				Constants.Email_Subject.RESET_PASSWORD,
+				EmailTemplates.OTP(otp)
+			);
+
+			TempData["Email"] = email;
+			return RedirectToAction("OTP", "Home");
+		}
+
+		[HttpGet("verify-otp")]
+		public async Task<IActionResult> OTP()
+		{
+			var email = TempData["Email"] as string;
+
+			if (string.IsNullOrEmpty(email))
+			{
+				return RedirectToAction("ForgotPassword");
+			}
+
+			ViewBag.Email = email; 
+			TempData["Email"] = email;
 			return View();
 		}
+
+		[HttpPost("verify-otp")]
+		public async Task<IActionResult> OTP(string email, string otpCode)
+		{
+			if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otpCode))
+			{
+				ViewBag.Message = "Vui lòng nhập đầy đủ thông tin!";
+				return View();
+			}
+
+			var user = await _unitOfWork.User.Queryable().FirstOrDefaultAsync(u => u.Email == email);
+
+			if (user == null)
+			{
+				ViewBag.Message = "Email không tồn tại trong hệ thống!";
+				return View();
+			}
+
+			var otp = await _unitOfWork.UserOtp.Queryable()
+				.Where(o => o.UserId == user.UserId && o.OtpCode == otpCode && o.IsUse == false && o.ExpiresAt > DateTime.UtcNow)
+				.FirstOrDefaultAsync();
+
+			if (otp == null)
+			{
+				ViewBag.Message = "Mã OTP không hợp lệ hoặc đã hết hạn!";
+				return View();
+			}
+
+			otp.IsUse = true;
+			await _unitOfWork.SaveChangesAsync();
+
+			TempData["Email"] = email; 
+			return RedirectToAction("ResetPassword", "Home");
+		}
+
+
 
 		[HttpGet("reset-password")]
 		public async Task<IActionResult> ResetPassword()
 		{
-			if (IsUserLoggedIn())
+			var email = TempData["Email"] as string;
+
+			if (string.IsNullOrEmpty(email))
 			{
-				return await HandleAuthenticatedUserRedirect("Login", "Home");
+				return RedirectToAction("ForgotPassword");
 			}
 
-			// Check thêm nếu không có sesstion forgotpassword account thì làm gì... 
+			ViewBag.Email = email; 
+			TempData["Email"] = email; 
 
 			return View();
+		}
+
+		[HttpPost("reset-password")]
+		public async Task<IActionResult> ResetPassword(string email, string newPassword)
+		{
+			if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPassword))
+			{
+				ViewBag.Message = "Vui lòng nhập đầy đủ thông tin!";
+				return View();
+			}
+
+			var user = await _unitOfWork.User.Queryable().FirstOrDefaultAsync(u => u.Email == email);
+
+			if (user == null)
+			{
+				ViewBag.Message = "Email không tồn tại!";
+				return View();
+			}
+
+			user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+			await _unitOfWork.SaveChangesAsync();
+
+			TempData["MessageSuccess"] = "Mật khẩu đã được đặt lại thành công!";
+			return RedirectToAction("Login", "Home");
 		}
 
 	}

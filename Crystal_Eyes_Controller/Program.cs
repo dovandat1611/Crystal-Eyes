@@ -1,7 +1,8 @@
-using Crystal_Eyes_Controller.Dtos.Email;
+﻿using Crystal_Eyes_Controller.Dtos.Email;
 using Crystal_Eyes_Controller.IRepositories;
 using Crystal_Eyes_Controller.IServices;
 using Crystal_Eyes_Controller.Mapper;
+using Crystal_Eyes_Controller.Middleware;
 using Crystal_Eyes_Controller.Models;
 using Crystal_Eyes_Controller.Repositories;
 using Crystal_Eyes_Controller.Services;
@@ -52,6 +53,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+app.UseMiddleware<AuthMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

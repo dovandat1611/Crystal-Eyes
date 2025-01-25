@@ -32,16 +32,26 @@
 		<div class="d-flex justify-content-center align-items-center">
 
 			<div class="size-210 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md custom-rounded-s-small ">
-				<form>
+				<form asp-action="OTP" method="post">
 					<h4 class="mtext-105 cl2 txt-center p-b-30">
-						OTP
+						Mã OTP - Quên Mật Khẩu
 					</h4>
+
+					@if (ViewBag.Message != null)
+					{
+						<div class="text-danger d-flex justify-content-center align-items-center m-b-10">
+							@ViewBag.Message
+						</div>
+					}
+					<input type="hidden" name="email" value="@ViewBag.Email" />
 
 					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
 						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="number" required
-							   placeholder="OTP*" name="otp">
+							   placeholder="OTP*" name="otpCode">
 					</div>
-
+					<div class="text-end p-b-20">
+						<span class="mtext-101 cl3" style="font-size: 14px;">Lưu ý: mã otp chỉ có hiệu lực trong vòng 10 phút</span>
+					</div>
 					<button class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
 						Xác nhận
 					</button>
