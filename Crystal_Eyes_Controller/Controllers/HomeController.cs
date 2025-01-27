@@ -18,6 +18,7 @@ using Crystal_Eyes_Controller.Middleware;
 using AutoMapper;
 using Crystal_Eyes_Controller.Dtos.Cart;
 using Crystal_Eyes_Controller.Dtos.Product;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
@@ -39,9 +40,51 @@ namespace Crystal_Eyes_Controller.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int category = 0)
         {
-			var products = await _unitOfWork.Product.Queryable().ToListAsync();
+			var products = await _unitOfWork.Product.Queryable().Include(x => x.Wishlists).ToListAsync();
+			var categories = await _unitOfWork.Category.Queryable().ToListAsync();
+
+			if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
+			{
+				int userId = int.Parse(ViewBag.UserId.ToString());
+
+				var carts = await _unitOfWork.Cart.Queryable().Include(x => x.Product).Where(x => x.UserId == userId).ToListAsync();
+
+				var cartsDto = _mapper.Map<List<CartViewDto>>(carts);
+
+				var totalAmount = cartsDto.Sum(x => x.TotalPrice);
+
+				ViewBag.Carts = cartsDto;
+				ViewBag.TotalAmount = totalAmount;
+			}
+
+			if(category != 0)
+			{
+				products = products.Where(x => x.CategoryId ==  category).ToList();
+			}
+
+			var productsDto = _mapper.Map<List<ProductViewDto>>(products);
+
+			ViewBag.Products = productsDto;
+			ViewBag.Categories = categories;
+			ViewBag.SearchCategory = category;
+			return View();
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> Index(string action, string queryName)
+		{
+			var productsQuery = _unitOfWork.Product.Queryable().Where(p => p.IsDelete == false && p.IsActive == true);
+
+			if(action == "SearchName" && !string.IsNullOrEmpty(queryName))
+			if (!string.IsNullOrWhiteSpace(queryName))
+			{
+				productsQuery = productsQuery.Where(p => p.Name.Contains(queryName));
+			}
+
+			var products = await productsQuery.ToListAsync();
+
 			var categories = await _unitOfWork.Category.Queryable().ToListAsync();
 
 			if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
@@ -62,12 +105,6 @@ namespace Crystal_Eyes_Controller.Controllers
 
 			ViewBag.Products = productsDto;
 			ViewBag.Categories = categories;
-			return View();
-        }
-
-		[HttpPost]
-		public IActionResult Index(int id)
-		{
 			return View();
 		}
 

@@ -95,17 +95,30 @@
 <section class="bg0 p-t-23 p-b-140">
 	<div class="container">
 		<div class="p-b-10">
-			<h3 class="ltext-103 cl5">
+			<h3 class="ltext-103 cl5" >
 				Giới thiệu sản phẩm
 			</h3>
 		</div>
 
-		<div class="flex-w flex-sb-m p-b-52">
+		<div class="flex-w flex-sb-m p-b-52" id="mainScreen">
 			<div class="flex-w flex-l-m filter-tope-group m-tb-10">
-				<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
+				<a href="?category=0#mainScreen"
+				   class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 @(ViewBag.SearchCategory == 0 ? "how-active1" : "")"
+				   data-filter="*">
 					Tất cả
-				</button>
+				</a>
 
+				@if (ViewBag.Categories != null)
+				{
+					foreach (var item in ViewBag.Categories as List<Category>)
+					{
+						<a href="?category=@item.CategoryId#mainScreen"
+						   class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 @(ViewBag.SearchCategory == item.CategoryId ? "how-active1" : "")"
+						   data-filter="*">
+							@item.Name
+						</a>
+					}
+				}
 				<!-- <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
 					Women
 				</button>
@@ -141,16 +154,28 @@
 				</div>
 			</div>
 
-			<!-- Search product -->
-			<div class="dis-none panel-search w-full p-t-10 p-b-15">
+			<!-- Search product AJAX -->
+@*			<div class="dis-none panel-search w-full p-t-10 p-b-15">
 					<div class="bor8 dis-flex p-l-15  custom-rounded-s-small">
 					<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" id="searchButton">
 							<i class="zmdi zmdi-search"></i>
 						</button>
 					<input class="mtext-107 cl2 size-114 plh2 p-r-15" id="searchQuery" type="text" name="search-product" placeholder="Tìm kiếm">
 					</div>
-			</div>
+			</div>*@
 
+			<!-- Search product -->
+			<form class="dis-none panel-search w-full p-t-10 p-b-15" asp-action="Index" method="post">
+				<input type="hidden" name="action" value="SearchName">
+				<div>
+					<div class="bor8 dis-flex p-l-15  custom-rounded-s-small">
+						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+							<i class="zmdi zmdi-search"></i>
+						</button>
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="queryName" placeholder="Tìm kiếm">
+					</div>
+				</div>
+			</form>
 
 			<!-- Filter -->
 			<div class="dis-none panel-filter w-full p-t-10 ">
@@ -351,7 +376,8 @@
 					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
 						<!-- Block2 -->
 						<div class="block-2">
-							<div class="block2-pic hov-img0 custom-rounded-large label-discount" data-label="Giảm @item.Discount %">
+							<div class="block2-pic hov-img0 custom-rounded-large label-discount"
+								 data-label="Giảm @(item.Discount.HasValue ? (item.Discount % 1 == 0 ? Math.Floor(item.Discount.Value).ToString("F0") : item.Discount.Value.ToString("F2")) : "0")%">
 								<img src="@item.MainImage"
 									 class="img-fluid rounded" alt="IMG-PRODUCT">
 							</div>
@@ -365,23 +391,28 @@
 									@if(item.Discount > 0)
 									{
 										<div class="price-container">
-											<span class="stext-105 cl3 old-price">@item.Price</span>
-											<span class="stext-105 cl3 current-price" style="font-size: 18px;">@(item.Price * (100 - item.Discount) / 100)</span>
+											<span class="stext-105 cl3 old-price formatprice">@item.Price</span>
+											<span class="stext-105 cl3 current-price formatprice" style="font-size: 18px;">@(item.Price * (100 - item.Discount) / 100)</span>
 										</div>
 									}
 									else
 									{
 										<div class="price-container">
-											<span class="stext-105 cl3 current-price" style="font-size: 18px;">@item.Price</span>
+											<span class="stext-105 cl3 current-price formatprice" style="font-size: 18px;">@item.Price</span>
 										</div>										
 									}
 								</div>
 
 								<div class="block2-txt-child2 flex-r p-t-3">
-									<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-										<img class="icon-heart1 dis-block trans-04" src="~/customersite/images/icons/icon-heart-01.png" alt="ICON">
-										<img class="icon-heart2 dis-block trans-04 ab-t-l" src="~/customersite/images/icons/icon-heart-02.png" alt="ICON">
-									</a>
+									@if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
+									{
+										<div class="btn-addwish-b2 dis-block pos-relative addwishlist @(item.IsWishlist == true ? "js-addedwish-b2" : "js-addwish-b2")"
+											 data-product-id="@item.ProductId"
+											 data-user-id="@ViewBag.UserId">
+											<img class="icon-heart1 dis-block trans-04" src="~/customersite/images/icons/icon-heart-01.png" alt="ICON">
+											<img class="icon-heart2 dis-block trans-04 ab-t-l" src="~/customersite/images/icons/icon-heart-02.png" alt="ICON">
+										</div>
+									}
 								</div>
 							</div>
 						</div>
@@ -411,7 +442,7 @@
 
 <script>
 	document.getElementById("searchButton").addEventListener("click", function (event) {
-		event.preventDefault(); // Ngăn form bị gửi đi theo mặc định
+		event.preventDefault(); // Ngăn form gửi mặc định
 
 		const query = document.getElementById("searchQuery").value.trim();
 
@@ -420,11 +451,16 @@
 			return;
 		}
 
-		// Gửi yêu cầu tìm kiếm
+		// Đảm bảo không có request dư thừa
 		fetch(`/search?query=${encodeURIComponent(query)}`, {
 			method: "GET",
 		})
-			.then(response => response.json())
+			.then(response => {
+				if (!response.ok) {
+					throw new Error("Lỗi khi tải dữ liệu.");
+				}
+				return response.json();
+			})
 			.then(data => {
 				const resultsDiv = document.getElementById("searchResults");
 				resultsDiv.innerHTML = ""; // Xóa kết quả cũ
@@ -435,28 +471,49 @@
 				}
 
 				data.forEach(item => {
-					const discountLabel = item.Discount > 0 ? `<span class="discount-label">Giảm ${item.Discount}%</span>` : "";
+					// Xử lý nhãn giảm giá
+					const discountLabel = item.discount > 0
+						? `
+						<div class="block2-pic hov-img0 custom-rounded-large label-discount" data-label="Giảm ${item.discount}%">
+							<img src="${item.mainImage}" alt="${item.name}" class="img-fluid rounded">
+						</div>`
+						: `
+						<div class="block2-pic hov-img0 custom-rounded-large">
+							<img src="${item.mainImage}" alt="${item.name}" class="img-fluid rounded">
+						</div>`;
 
+					// Xử lý hiển thị giá
+					const discountHtml = item.discount > 0
+						? `
+						<div class="price-container">
+							<span class="stext-105 cl3 old-price">${item.price.toFixed(2)} VND</span>
+							<span class="stext-105 cl3 current-price" style="font-size: 18px;">
+								${(item.price * (100 - item.discount) / 100).toFixed(2)} VND
+							</span>
+						</div>`
+						: `
+						<div class="price-container">
+							<span class="stext-105 cl3 current-price" style="font-size: 18px;">
+								${item.price.toFixed(2)} VND
+							</span>
+						</div>`;
+
+					// Tạo HTML cho mỗi sản phẩm
 					const resultItem = `
 					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
 						<div class="block-2">
-							<div class="block2-pic hov-img0 custom-rounded-large" style="position: relative;">
-								${discountLabel}
-								<img src="${item.MainImage}" alt="${item.Name}" class="img-fluid rounded">
-							</div>
+							${discountLabel}
 							<div class="block2-txt flex-w flex-t p-t-14">
 								<div class="block2-txt-child1 flex-col-l">
-									<a href="/product-detail/${item.ProductId}" class="stext-110 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-										${item.Name}
+									<a href="/product-detail/${item.productId}" class="stext-110 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+										${item.name}
 									</a>
-									<span class="stext-105 cl3" style="font-size: 18px;">
-										Giá: ${(item.Price * (100 - item.Discount) / 100).toFixed(2)} VND
-									</span>
+									${discountHtml}
 								</div>
 							</div>
 						</div>
-					</div>
-					`;
+					</div>`;
+
 					resultsDiv.innerHTML += resultItem;
 				});
 			})

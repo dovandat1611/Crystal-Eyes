@@ -255,24 +255,44 @@
 	<!--===============================================================================================-->
 	<script src="~/customersite/vendor/sweetalert/sweetalert.min.js"></script>
 	<script>
-		$('.js-addwish-b2, .js-addwish-detail').on('click', function(e){
-			e.preventDefault();
-		});
+		$(document).ready(function () {
+			$('.addwishlist').on('click', function (e) {
+				e.preventDefault();
 
-		$('.js-addwish-b2').each(function(){
-			var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to wishlist !", "success");
+				const productId = $(this).data('product-id'); // Lấy productId từ data-attribute
+				const userId = $(this).data('user-id'); // Lấy userId từ data-attribute
+				const $this = $(this); // Lưu tham chiếu đến phần tử hiện tại
+				var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
 
-				$(this).addClass('js-addedwish-b2');
-				$(this).off('click');
+				// Gửi yêu cầu Ajax
+				$.ajax({
+					url: `/wish-list-process/${productId}/${userId}`,
+					method: "GET",
+					success: function (response) {
+						// Hiển thị thông báo
+						swal(nameProduct, response.message, "success");
+
+						// Cập nhật giao diện icon heart
+						if (response.action === "Create") {
+							$this.addClass('js-addedwish-b2');
+							$this.removeClass('js-addwish-b2');
+						} else if (response.action === "Delete") {
+							$this.addClass('js-addwish-b2');
+							$this.removeClass('js-addedwish-b2');
+						}
+					},
+					error: function () {
+						swal("Lỗi", "Đã xảy ra lỗi, vui lòng thử lại sau!", "error");
+					}
+				});
 			});
 		});
 
-		$('.js-addwish-detail').each(function(){
+
+		$('.js-addwish-detail').each(function () {
 			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
 
-			$(this).on('click', function(){
+			$(this).on('click', function () {
 				swal(nameProduct, "is added to wishlist !", "success");
 
 				$(this).addClass('js-addedwish-detail');
@@ -288,8 +308,8 @@
 				swal(nameProduct, "is added to cart !", "success");
 			});
 		});
-
 	</script>
+
 	<!--===============================================================================================-->
 	<script src="~/customersite/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 	<script>
@@ -308,6 +328,23 @@
 		});
 	</script>
 	<!--===============================================================================================-->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// Lấy tất cả các phần tử có class "formatprice"
+			const priceElements = document.querySelectorAll(".formatprice");
+
+			// Duyệt qua từng phần tử và định dạng giá trị
+			priceElements.forEach(element => {
+				const value = parseFloat(element.textContent.replace(/,/g, '')); // Chuyển nội dung thành số (loại bỏ dấu phẩy nếu có)
+				if (!isNaN(value)) {
+					element.textContent = new Intl.NumberFormat('vi-VN', {
+						style: 'currency',
+						currency: 'VND',
+					}).format(value); // Định dạng số sang tiền tệ
+				}
+			});
+		});
+	</script>
 	<script src="~/customersite/js/main.js"></script>
 </body>
 </html>
