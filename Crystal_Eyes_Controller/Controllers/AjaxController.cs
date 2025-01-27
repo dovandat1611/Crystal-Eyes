@@ -70,8 +70,8 @@ namespace Crystal_Eyes_Controller.Controllers
 					action = "Create";
 				}
 			}
-
-			return Json(new { message, action });
+			var totalWishlist = await _unitOfWork.Wishlist.Queryable().CountAsync(x => x.UserId == userId);
+			return Json(new { message, action, totalWishlist});
 		}
 
 

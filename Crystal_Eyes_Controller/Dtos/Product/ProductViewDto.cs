@@ -15,5 +15,6 @@
 		public decimal? Discount { get; set; }
 
 		public bool? IsWishlist { get; set; }
+
 	}
 }

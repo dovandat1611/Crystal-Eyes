@@ -19,6 +19,7 @@ using AutoMapper;
 using Crystal_Eyes_Controller.Dtos.Cart;
 using Crystal_Eyes_Controller.Dtos.Product;
 using Microsoft.IdentityModel.Tokens;
+using Crystal_Eyes_Controller.Dtos.Feedback;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
@@ -39,10 +40,15 @@ namespace Crystal_Eyes_Controller.Controllers
 			_mapper = mapper;
 		}
 
+
 		[HttpGet]
-		public async Task<IActionResult> Index(int category = 0)
+		public async Task<IActionResult> Index(int category = 0, string menu = null, string price = null, string sort = null, string color = null)
         {
-			var products = await _unitOfWork.Product.Queryable().Include(x => x.Wishlists).ToListAsync();
+			var products = _unitOfWork.Product.Queryable().Include(x => x.Wishlists).Include(p => p.OrderDetails).Include(x => x.Colors)
+			.Include(p => p.Feedbacks).Where(p => p.IsDelete == false && p.IsActive == true);
+
+			var colors = await _unitOfWork.Color.Queryable().Select(x => x.ColorName).Distinct().ToListAsync();
+
 			var categories = await _unitOfWork.Category.Queryable().ToListAsync();
 
 			if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
@@ -59,28 +65,106 @@ namespace Crystal_Eyes_Controller.Controllers
 				ViewBag.TotalAmount = totalAmount;
 			}
 
-			if(category != 0)
+			if(category > 0 ||  menu != null || price != null || sort != null || color != null)
 			{
-				products = products.Where(x => x.CategoryId ==  category).ToList();
+				ViewBag.MainScreen = true;
+			}
+
+			if (category > 0)
+			{
+				products = products.Where(x => x.CategoryId ==  category);
+			}
+
+			switch (menu)
+			{
+				case "popular":
+					products = products.OrderByDescending(p => p.OrderDetails.Count);
+					ViewBag.Menu = menu;
+					break;
+				case "rating":
+					products = products.OrderByDescending(p => p.Feedbacks.Any() ? p.Feedbacks.Average(f => f.Star) : 0);
+					ViewBag.Menu = menu;
+					break;
+				case "new":
+					products = products.OrderByDescending(p => p.ProductId);
+					ViewBag.Menu = menu;
+					break;
+				default:
+					ViewBag.Menu = menu;
+					break;
+			}
+
+
+			switch (sort)
+			{
+				case "lth":
+					products = products.OrderBy(p => p.Price * (100 - p.Discount ?? 0) / 100);
+					ViewBag.Sort = sort;
+					break;
+				case "htl":
+					products = products.OrderByDescending(p => p.Price * (100 - p.Discount ?? 0) / 100);
+					ViewBag.Sort = sort;
+					break;
+				default:
+					break;
+			}
+
+			switch (price)
+			{
+				case "0to1":
+					products = products.Where(p => p.Price * (100 - p.Discount ?? 0) / 100 >= 0 && p.Price * (100 - p.Discount ?? 0) / 100 <= 100000);
+					ViewBag.Price = price;
+					break;
+				case "1to3":
+					products = products.Where(p => p.Price * (100 - p.Discount ?? 0) / 100 >= 100000 && p.Price * (100 - p.Discount ?? 0) / 100 <= 300000);
+					ViewBag.Price = price;
+					break;
+				case "3to5":
+					products = products.Where(p => p.Price * (100 - p.Discount ?? 0) / 100 >= 300000 && p.Price * (100 - p.Discount ?? 0) / 100 <= 500000);
+					ViewBag.Price = price;
+					break;
+				case "5plus":
+					products = products.Where(p => p.Price * (100 - p.Discount ?? 0) / 100 >= 500000);
+					ViewBag.Price = price;
+					break;
+				default:
+					ViewBag.Price = price;
+					break;
+			}
+
+			if(color != null)
+			{
+				products = products.Where(x => x.Colors.Any(c => c.ColorName == color));
+				ViewBag.Color = color;
 			}
 
 			var productsDto = _mapper.Map<List<ProductViewDto>>(products);
 
 			ViewBag.Products = productsDto;
+			ViewBag.Colors = colors;
 			ViewBag.Categories = categories;
 			ViewBag.SearchCategory = category;
 			return View();
         }
 
 		[HttpPost]
-		public async Task<IActionResult> Index(string action, string queryName)
+		public async Task<IActionResult> Index(string action, string queryName, int category = 0)
 		{
-			var productsQuery = _unitOfWork.Product.Queryable().Where(p => p.IsDelete == false && p.IsActive == true);
+			var productsQuery = _unitOfWork.Product.Queryable().Include(x => x.Wishlists).Include(p => p.OrderDetails).Include(x => x.Colors)
+			.Include(p => p.Feedbacks).Where(p => p.IsDelete == false && p.IsActive == true);
+			var colors = await _unitOfWork.Color.Queryable().Select(x => x.ColorName).Distinct().ToListAsync();
 
-			if(action == "SearchName" && !string.IsNullOrEmpty(queryName))
+
+			if (action == "SearchName" && !string.IsNullOrEmpty(queryName))
+
 			if (!string.IsNullOrWhiteSpace(queryName))
 			{
 				productsQuery = productsQuery.Where(p => p.Name.Contains(queryName));
+			}
+
+			if (category != 0)
+			{
+				productsQuery = productsQuery.Where(x => x.CategoryId == category);
 			}
 
 			var products = await productsQuery.ToListAsync();
@@ -105,6 +189,13 @@ namespace Crystal_Eyes_Controller.Controllers
 
 			ViewBag.Products = productsDto;
 			ViewBag.Categories = categories;
+
+
+			//SEARCH
+			ViewBag.SearchCategory = category;
+			ViewBag.SearchName = queryName;
+			ViewBag.Colors = colors;
+			ViewBag.MainScreen = true;
 			return View();
 		}
 
@@ -114,10 +205,41 @@ namespace Crystal_Eyes_Controller.Controllers
 			return View();
 		}
 
-		[HttpGet("product-detail")]
-		public IActionResult ProductDetail(int id)
+		[HttpGet("product-detail/{productId}")]
+		public async Task<IActionResult> ProductDetail(int productId)
 		{
 
+			var product = await _unitOfWork.Product.Queryable()
+				.Include(x => x.Wishlists)
+				.Include(x => x.Category)
+				.Where(p => p.IsDelete == false && p.IsActive == true)
+				.FirstOrDefaultAsync(x => x.ProductId == productId);
+
+			if (product == null)
+			{
+				return NotFound(); 
+			}
+
+
+			var relatedProduct = await _unitOfWork.Product.Queryable()
+				.Include(x => x.Wishlists)
+				.Include(x => x.Category)
+				.Where(p => p.IsDelete == false && p.IsActive == true && p.CategoryId == product.CategoryId).ToListAsync();
+
+			var colors = await _unitOfWork.Color.Queryable().Where(x => x.ProductId == productId).ToListAsync();
+			var images = await _unitOfWork.Image.Queryable().Where(x => x.ProductId == productId).ToListAsync();
+			var reviews = await _unitOfWork.Feedback.Queryable().Include(x => x.User).ThenInclude(x => x.Customer).Where(x => x.ProductId == productId).ToListAsync();
+
+
+			var productDetailDto = _mapper.Map<ProductDetailViewDto>(product);
+			var relatedProductDto = _mapper.Map<List<ProductViewDto>>(relatedProduct);
+			var reviewProductDto = _mapper.Map<List<FeedbackViewDto>>(reviews);
+
+			ViewBag.ProductDetail = productDetailDto;
+			ViewBag.ProductDetailColor = colors;
+			ViewBag.ProductDetailImage = images;
+			ViewBag.RelateProduct = relatedProductDto;
+			ViewBag.Review = reviewProductDto;
 			return View();
 		}
 

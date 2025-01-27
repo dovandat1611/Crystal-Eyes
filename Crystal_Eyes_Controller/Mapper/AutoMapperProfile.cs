@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Crystal_Eyes_Controller.Dtos;
 using Crystal_Eyes_Controller.Dtos.Cart;
+using Crystal_Eyes_Controller.Dtos.Feedback;
 using Crystal_Eyes_Controller.Dtos.Product;
 using Crystal_Eyes_Controller.Models;
 
@@ -52,9 +53,18 @@ namespace Crystal_Eyes_Controller.Mapper
 				.ForMember(dest => dest.IsWishlist, opt => opt.MapFrom(src =>
 					src.Wishlists != null && src.Wishlists.Any()));
 
+			CreateMap<Product, ProductDetailViewDto>()
+				.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src =>
+					src.Category != null ? src.Category.Name : null))
+				.ForMember(dest => dest.IsWishlist, opt => opt.MapFrom(src =>
+					src.Wishlists != null && src.Wishlists.Any()));
 
 
-
+			CreateMap<Feedback, FeedbackViewDto>()
+				.ForMember(dest => dest.Image, opt => opt.MapFrom(src =>
+					src.User != null && src.User.Customer != null ? src.User.Customer.Image : null))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
+					src.User != null && src.User.Customer != null ? src.User.Customer.Name : null));
 		}
 	}
 }
