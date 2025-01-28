@@ -3,4 +3,266 @@
     Layout = "_CustomerLayout";
 }
 
-<h1> hehe </h1>
+
+<!-- Product -->
+<section class="bg0 p-t-23 p-b-140">
+	<div class="container">
+		<div class="flex-w flex-sb-m p-b-52">
+			<div class="flex-w flex-l-m filter-tope-group m-tb-10">
+				<a href="?category=0"
+				   class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 @(ViewBag.SearchCategory == 0 ? "how-active1" : "")"
+				   data-filter="*">
+					Tất cả
+				</a>
+				@if (ViewBag.Categories != null)
+				{
+					foreach (var item in ViewBag.Categories as List<Category>)
+					{
+						<a href="?category=@item.CategoryId"
+						   class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 @(ViewBag.SearchCategory == item.CategoryId ? "how-active1" : "")"
+						   data-filter="*">
+							@item.Name
+						</a>
+					}
+				}
+			</div>
+
+			<div class="flex-w flex-c-m m-tb-10">
+				<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter custom-rounded-s-small-button
+					@(ViewBag.Menu != null ||  ViewBag.Price != null ||  ViewBag.Sort != null || ViewBag.Color != null ? "show-filter" : "")">
+					<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+					<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+					Bộ lọc
+				</div>
+
+				<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search custom-rounded-s-small-button @(ViewBag.SearchName != null ? "show-search" : "")">
+					<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+					<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+					Tìm kiếm
+				</div>
+			</div>
+
+			<!-- Search product AJAX -->
+			@*			<form class="dis-none panel-search w-full p-t-10 p-b-15">
+			<div class="bor8 dis-flex p-l-15  custom-rounded-s-small">
+			<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04" id="searchButton">
+			<i class="zmdi zmdi-search"></i>
+			</button>
+			<input class="mtext-107 cl2 size-114 plh2 p-r-15" id="searchQuery" type="text" name="search-product" placeholder="Tìm kiếm">
+			</div>
+			</form>*@
+
+			<!-- Search product -->
+			<form class="panel-search w-full p-t-10 p-b-15 @(ViewBag.SearchName == null ? "dis-none" : "")" asp-action="Index" method="post">
+				<input type="hidden" name="category" value="@ViewBag.SearchCategory">
+				<input type="hidden" name="action" value="SearchName">
+				<div>
+					<div class="bor8 dis-flex p-l-15 custom-rounded-s-small">
+						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+							<i class="zmdi zmdi-search"></i>
+						</button>
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="queryName"
+							   value="@((ViewBag.SearchName != null) ? ViewBag.SearchName : "")" placeholder="Tìm kiếm">
+					</div>
+				</div>
+			</form>
+
+
+			<!-- Filter -->
+			<div class="@(ViewBag.Menu != null ||  ViewBag.Price != null ||  ViewBag.Sort != null || ViewBag.Color != null ? "" : "dis-none") panel-filter w-full p-t-10 ">
+				<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm justify-content-between custom-rounded-s-small">
+					<div class="filter-col1 p-r-15 p-b-27">
+						<div class="mtext-102 cl2 p-b-15">
+							Chọn mục
+						</div>
+
+						<ul>
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=default&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Menu == "default" ? "filter-link-active" : "")">
+									Mặc Định
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=popular&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Menu == "popular" ? "filter-link-active" : "")">
+									Phổ biến nhất
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=rating&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Menu == "rating" ? "filter-link-active" : "")">
+									Đánh giá cao
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=new&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Menu == "new" ? "filter-link-active" : "")">
+									Mới nhất
+								</a>
+							</li>
+						</ul>
+
+					</div>
+
+					<div class="filter-col2 p-r-15 p-b-27">
+						<div class="mtext-102 cl2 p-b-15">
+							Khoảng giá
+						</div>
+
+						<ul>
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=all&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Price == "all" ? "filter-link-active" : "")">
+									Tất cả
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=0to1&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Price == "0to1" ? "filter-link-active" : "")">
+									0đ - 100.000đ
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=1to3&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Price == "1to3" ? "filter-link-active" : "")">
+									100.000đ - 300.000đ
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=3to5&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Price == "3to5" ? "filter-link-active" : "")">
+									300.000đ - 500.000đ
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=5plus&sort=@ViewBag.Sort&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Price == "5plus" ? "filter-link-active" : "")">
+									500.000đ+
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="filter-col3 p-r-15 p-b-27">
+						<div class="mtext-102 cl2 p-b-15">
+							Sắp xếp giá
+						</div>
+						<ul>
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=@ViewBag.Price&sort=lth&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Sort == "lth" ? "filter-link-active" : "")">
+									Thấp đến Cao
+								</a>
+							</li>
+
+							<li class="p-b-6">
+								<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=@ViewBag.Price&sort=htl&color=@ViewBag.Color" class="filter-link stext-106 trans-04 @(ViewBag.Sort == "htl" ? "filter-link-active" : "")">
+									Cao xuống Thấp
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<div class="filter-col4 p-r-15 p-b-27">
+						<div class="mtext-102 cl2 p-b-15">
+							Màu sắc
+						</div>
+
+						<ul>
+							@foreach (var item in ViewBag.Colors)
+							{
+								<li class="p-b-6">
+									<span class="fs-15 lh-12 m-r-6" style="color: #222;">
+										<i class="zmdi zmdi-circle"></i>
+									</span>
+
+									<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@item"
+									   class="filter-link stext-106 trans-04 @(ViewBag.Color == item ? "filter-link-active" : "")">
+										@item
+									</a>
+								</li>
+							}
+						</ul>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row isotope-grid" id="searchResults">
+
+			@if (ViewBag.Products != null && ViewBag.Products.Count > 0)
+			{
+				@foreach (var item in ViewBag.Products as List<ProductViewDto>)
+				{
+					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
+						<!-- Block2 -->
+						<div class="block-2">
+							<div class="block2-pic hov-img0 custom-rounded-medium label-discount"
+								 data-label="Giảm @(item.Discount.HasValue ? (item.Discount % 1 == 0 ? Math.Floor(item.Discount.Value).ToString("F0") : item.Discount.Value.ToString("F2")) : "0")%">
+								<img src="@item.MainImage"
+									 class="img-fluid rounded" alt="IMG-PRODUCT">
+							</div>
+
+							<div class="block2-txt flex-w flex-t p-t-14">
+								<div class="block2-txt-child1 flex-col-l">
+									<a href="/product-detail/@item.ProductId" style="font-size: 18px;" class="stext-110 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+										@item.Name
+									</a>
+
+									@if (item.Discount > 0)
+									{
+										<div class="price-container">
+											<span class="stext-105 cl3 old-price formatprice">@item.Price</span>
+											<span class="stext-105 cl3 current-price formatprice" style="font-size: 18px;">@(item.Price * (100 - item.Discount) / 100)</span>
+										</div>
+									}
+									else
+									{
+										<div class="price-container">
+											<span class="stext-105 cl3 current-price formatprice" style="font-size: 18px;">@item.Price</span>
+										</div>
+									}
+								</div>
+
+								<div class="block2-txt-child2 flex-r p-t-3">
+									@if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
+									{
+										<div class="btn-addwish-b2 dis-block pos-relative addwishlist @(item.IsWishlist == true ? "js-addedwish-b2" : "js-addwish-b2")"
+											 data-product-id="@item.ProductId"
+											 data-user-id="@ViewBag.UserId">
+											<img class="icon-heart1 dis-block trans-04" src="~/customersite/images/icons/icon-heart-01.png" alt="ICON">
+											<img class="icon-heart2 dis-block trans-04 ab-t-l" src="~/customersite/images/icons/icon-heart-02.png" alt="ICON">
+										</div>
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			}
+			else
+			{
+				<h4 class="p-b-35 isotope-item text-center"><i class="zmdi zmdi-search"></i> Không tìm thấy kết quả nào.</h4>
+			}
+		</div>
+
+		@if (ViewBag.Products != null && ViewBag.Products.Count > 0)
+		{
+			<div class="flex-c-m flex-w w-full p-t-38">
+				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+					<i class="zmdi zmdi-arrow-left"></i>
+				</a>
+				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+					1
+				</a>
+
+				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
+					2
+				</a>
+				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+					<i class="zmdi zmdi-arrow-right"></i>
+				</a>
+			</div>
+		}
+	</div>
+</section>

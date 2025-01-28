@@ -437,6 +437,30 @@
       "PackagePath": "staticwebassets\\customersite\\images\\icons\\icon-prev.png"
     },
     {
+      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\left.png",
+      "PackagePath": "staticwebassets\\customersite\\images\\left.png"
+    },
+    {
+      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\mid.png",
+      "PackagePath": "staticwebassets\\customersite\\images\\mid.png"
+    },
+    {
+      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\owner.jpg",
+      "PackagePath": "staticwebassets\\customersite\\images\\owner.jpg"
+    },
+    {
+      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\right.png",
+      "PackagePath": "staticwebassets\\customersite\\images\\right.png"
+    },
+    {
+      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\subbannerleft.jpg",
+      "PackagePath": "staticwebassets\\customersite\\images\\subbannerleft.jpg"
+    },
+    {
+      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\subbannerright.png",
+      "PackagePath": "staticwebassets\\customersite\\images\\subbannerright.png"
+    },
+    {
       "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\js\\main.js",
       "PackagePath": "staticwebassets\\customersite\\js\\main.js"
     },
