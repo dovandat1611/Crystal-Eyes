@@ -32,6 +32,10 @@ builder.Services.AddSession(options =>
 
 // REPOSITORIES
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<IWishlistService, WishlistService>();
+
 // SERVICE
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
@@ -53,18 +57,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
-app.UseMiddleware<AuthMiddleware>();
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
+// Phải đặt trước các middleware khác
 app.UseSession();
 
+app.UseMiddleware<AuthMiddleware>();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

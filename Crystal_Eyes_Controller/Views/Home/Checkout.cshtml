@@ -1,0 +1,266 @@
+﻿@{
+    ViewData["Title"] = "Crytal Eyes | Xác nhận đặt hàng";
+    Layout = "_CustomerLayout";
+}
+
+<!-- breadcrumb -->
+<div class="container">
+	<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+		<a href="index.html" class="stext-109 cl8 hov-cl1 trans-04">
+			Trang chủ
+			<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+		</a>
+
+		<span class="stext-109 cl4">
+			Xác nhận đặt hàng
+		</span>
+	</div>
+</div>
+
+
+<!-- Shoping Cart -->
+<form class="bg0 p-t-75 p-b-85">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+				<div class="m-l-25 m-r--38 m-lr-0-xl custom-rounded-s-small">
+					<div class="wrap-table-shopping-cart">
+						<table class="table-shopping-cart">
+							<thead>
+							<tr class="table_head">
+								<th class="column-1">Tên Sản Phẩm</th>
+								<th class="column-2"></th>
+								<th class="column-3">Giá</th>
+								<th class="column-4">Số Lượng</th>
+								<th class="column-5">Tổng Tiền</th>
+							</tr>
+							</thead>
+
+							<tbody id="table-cart">
+								<!-- Nội dung giỏ hàng sẽ được load vào đây -->
+							</tbody>
+						</table>
+					</div>
+
+					<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+						<div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10" id="update-cart-session">
+							Cập nhật giỏ hàng
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
+				<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm custom-rounded-s-small">
+					<h4 class="mtext-109 cl2 p-b-30">
+						Thông tin giỏ hàng
+					</h4>
+
+					<div class="flex-w flex-t bor12 p-t-15 p-b-30">
+						<div class="size-208 w-full-ssm">
+							<span class="stext-110 cl2">
+								Thông tin người nhận hàng:
+							</span>
+						</div>
+
+						<div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
+							<div class="p-t-2">
+								<div class="bor8 bg0 m-b-12 custom-rounded-form  ">
+									<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="name" placeholder="Tên người nhận">
+								</div>
+
+								<div class="bor8 bg0 m-b-22 custom-rounded-form ">
+									<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="phone" placeholder="Số điện thoại">
+								</div>
+
+								<div class="bor8 bg0 m-b-22 custom-rounded-form ">
+									<input class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="address" placeholder="Địa chỉ">
+								</div>
+
+								<div class="bor8 bg0 m-b-22 custom-rounded-form ">
+									<textarea class="stext-111 cl8 plh3 size-111 p-lr-15" type="text" name="content" placeholder="Yêu cầu"></textarea>
+								</div>
+
+								<span class="mtext-101 cl8" style="font-size: 14px;">
+									Lưu ý: Shop đang chỉ nhận ship COD mong bạn thông cảm.
+								</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="flex-w flex-t p-t-27 p-b-33">
+						<div class="size-208">
+							<span class="mtext-101 cl2">
+								Tổng tiền:
+							</span>
+						</div>
+
+						<div class="size-209 p-t-1">
+							<span class="mtext-110 cl2" id="total-amount-cart-session">
+								0
+							</span>
+						</div>
+					</div>
+
+					<button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+						Xác nhận đặt hàng
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+<script>
+	$(document).ready(function () {
+
+		function loadCartCheckout() {
+			$.ajax({
+				url: "/cart",
+				type: "GET",
+				success: function (response) {
+					if (!response || !response.items || !Array.isArray(response.items)) {
+						console.error("Dữ liệu API không hợp lệ:", response);
+						return;
+					}
+
+					$(".icon-header-noti.js-show-cart").attr("data-notify", response.items.length);
+
+					let cartHtml = "";
+					let cartHtmlLeftSide = "";
+					let totalAmount = 0;
+
+						const formatPrice = (price) => {
+							return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+						};
+
+					if (response.items.length > 0) {
+						response.items.forEach(item => {
+							cartHtml += `
+								<tr class="table_row">
+									<td class="column-1">
+										<div class="how-itemcart1 remove-cart-item-session data-product-id="${item.productId}" data-color="${item.colorId}">
+											<img class="custom-rounded-quantity" src="${item.mainImage}"  alt="IMG">
+										</div>
+									</td>
+									<input type="hidden" name="product-id-update-cart" value="${item.productId}">
+									<input type="hidden" name="color-id-update-cart" value="${item.colorId}">
+									<td class="column-2">${item.name} - <span style="color: gray;">${item.colorName}</td>
+									<td class="column-3">${formatPrice(item.price)}</td>
+									<td class="column-4">
+										<div class="wrap-num-product flex-w m-l-auto m-r-0 custom-rounded-quantity">
+											<div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-minus"></i>
+											</div>
+
+											<input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product1" value="${item.quantity}">
+
+											<div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+												<i class="fs-16 zmdi zmdi-plus"></i>
+											</div>
+										</div>
+									</td>
+									<td class="column-5 formatprice">${formatPrice(item.totalPrice)}</td>
+								</tr>
+									`;
+
+								cartHtmlLeftSide += `
+											<li class="header-cart-item flex-w flex-t m-b-12 custom-rounded">
+												<div class="header-cart-item-img remove-cart-item-session" data-product-id="${item.productId}" data-color="${item.colorId}">
+													<img src="${item.mainImage}" alt="IMG">
+												</div>
+												<div class="header-cart-item-txt p-t-8">
+													<a href="/product-detail/${item.productId}" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+														${item.name} - <span style="color: gray;">${item.colorName}</span>
+													</a>
+													<span class="header-cart-item-info">
+															${item.quantity} x ${formatPrice(item.price)}
+													</span>
+												</div>
+											</li>
+										`;
+						});
+
+					} else {
+							cartHtml = `
+							<tr class="table_row">
+								<td colspan="5" class="text-center py-5">Giỏ hàng trống</td>
+							</tr>`;
+							cartHtmlLeftSide = `<li class="header-cart-item flex-w flex-t m-b-12">Giỏ hàng trống</li>`;
+					}
+					$("#total-amount-cart-session").text(formatPrice(response.totalAmount));
+					$("#total-amount").text(formatPrice(response.totalAmount));
+					$("#table-cart").html(cartHtml);
+					$("#cart-container").html(cartHtmlLeftSide);
+				},
+				error: function (xhr, status, error) {
+					console.error("Lỗi khi tải giỏ hàng!", xhr.responseText);
+				}
+			});
+		}
+
+		loadCartCheckout();
+
+		$("body").on("click", ".remove-cart-item-session", function () {
+				var productId = $(this).data('product-id');
+				var color = $(this).data('color');
+
+				$.ajax({
+					url: "/cart/remove",
+					type: "POST",
+					data: {
+						productId: productId,
+						color: color
+					},
+					success: function (response) {
+						if (response.success) {
+							swal("Thông báo", response.message, "success");
+							loadCartCheckout();
+						}
+					},
+					error: function () {
+						alert("Lỗi khi xóa sản phẩm khỏi giỏ hàng!");
+					}
+				});
+		});
+
+			$(document).on("click", "#update-cart-session", function () {
+				var cartItems = [];
+
+				$(".table_row").each(function () {
+					// Lấy giá trị từ các input ẩn
+					var productId = $(this).find("input[name='product-id-update-cart']").val();
+					var colorId = $(this).find("input[name='color-id-update-cart']").val();
+					var quantity = $(this).find(".num-product").val();
+
+					cartItems.push({
+						productId: productId,
+						quantity: quantity,
+						color: colorId
+					});
+				});
+
+				console.log("Cập nhật giỏ hàng:", cartItems);
+
+				$.ajax({
+					url: "/cart/update",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify({ cartItems: cartItems }),
+					success: function (response) {
+						console.log("Giỏ hàng đã được cập nhật:", response);
+						loadCartCheckout();
+						swal("Thành công!", "Giỏ hàng đã được cập nhật.", "success");
+					},
+					error: function () {
+						swal("Lỗi!", "Không thể cập nhật giỏ hàng.", "error");
+					}
+				});
+			});
+
+
+
+	});
+</script>
+}

@@ -1,27 +1,15 @@
 ﻿using Crystal_Eyes_Controller.Dtos;
+using Crystal_Eyes_Controller.Middleware;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
+	[CustomAuthorize]
 	[Route("customer")]
-	public class CustomerController : Controller
+	public class CustomerController : BaseController
 	{
 		public CustomerController()
 		{
-		}
-		public bool checkLogin()
-		{
-			bool checkL = true;
-			var httpContext = HttpContext;
-			if (httpContext != null)
-			{
-				string isCustomerAuthenticated = httpContext.Request.Cookies["customer"];
-				if (string.IsNullOrEmpty(isCustomerAuthenticated))
-				{
-					checkL = false;
-				}
-			}
-			return checkL;
 		}
 
 		[HttpGet("change-password")]
@@ -38,12 +26,6 @@ namespace Crystal_Eyes_Controller.Controllers
 
 		[HttpGet("history-order")]
 		public IActionResult HistoryOrder()
-		{
-			return View();
-		}
-
-		[HttpGet("checkout")]
-		public IActionResult Checkout()
 		{
 			return View();
 		}

@@ -25,7 +25,7 @@ namespace Crystal_Eyes_Controller.Middleware
             if (string.IsNullOrEmpty(customerCookie))
             {
                 var publicActions = new List<string> { "Login", "Register", "ForgotPassword", "OTP", "Index", "Shop",
-                    "ProductDetail", "Verify", "Register", "ResetPassword"};
+                    "ProductDetail", "Verify", "Register", "ResetPassword", "Checkout"};
 
                 if (controllerName == "Admin" || controllerName == "Customer" || !publicActions.Contains(actionName))
                 {

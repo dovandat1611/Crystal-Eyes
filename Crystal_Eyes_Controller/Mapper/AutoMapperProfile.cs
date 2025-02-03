@@ -48,16 +48,13 @@ namespace Crystal_Eyes_Controller.Mapper
 						: src.Product.Price) * src.Quantity
 					: 0));
 
-
 			CreateMap<Product, ProductViewDto>()
 				.ForMember(dest => dest.IsWishlist, opt => opt.MapFrom(src =>
 					src.Wishlists != null && src.Wishlists.Any()));
 
 			CreateMap<Product, ProductDetailViewDto>()
 				.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src =>
-					src.Category != null ? src.Category.Name : null))
-				.ForMember(dest => dest.IsWishlist, opt => opt.MapFrom(src =>
-					src.Wishlists != null && src.Wishlists.Any()));
+					src.Category != null ? src.Category.Name : null));
 
 
 			CreateMap<Feedback, FeedbackViewDto>()

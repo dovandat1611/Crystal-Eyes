@@ -1,7 +1,9 @@
 ﻿using Crystal_Eyes_Controller.Common;
+using Crystal_Eyes_Controller.Dtos.Cart;
 using Crystal_Eyes_Controller.Models;
 using Crystal_Eyes_Controller.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Crystal_Eyes_Controller.Middleware
 {
@@ -27,15 +29,27 @@ namespace Crystal_Eyes_Controller.Middleware
 					context.Items["UserId"] = user.UserId.ToString();
 					context.Items["Email"] = user.Email;
 					context.Items["RoleName"] = user.RoleName;
-					if (user.RoleName == Constants.Role_Name.CUSTOMER)
-					{
-						var totalWishList = await unitOfWork.Wishlist.Queryable().Where(x => x.UserId == user.UserId).CountAsync();
-						var totalCart = await unitOfWork.Cart.Queryable().Where(x => x.UserId == user.UserId).CountAsync();
-						context.Items["TotalCart"] = totalCart;
-						context.Items["TotalWishList"] = totalWishList;
-					}
 				}
 			}
+
+			// Retrieve Wishlist from Cookie
+			var wishlistCookie = context.Request.Cookies["wishlist"];
+			List<int> wishlist = wishlistCookie != null
+				? JsonConvert.DeserializeObject<List<int>>(wishlistCookie)
+				: new List<int>();
+
+			// Retrieve Cart from Session
+			var cartSession = context.Session.GetString("Cart");
+			List<CartItemDto> cart = cartSession != null
+				? JsonConvert.DeserializeObject<List<CartItemDto>>(cartSession)
+				: new List<CartItemDto>();
+
+
+			// Set counts to context.Items
+			context.Items["TotalWishList"] = wishlist.Count;
+			context.Items["TotalCart"] = cart.Count;
+
+			context.Items["WishList"] = wishlist;
 
 			await _next(context);
 		}

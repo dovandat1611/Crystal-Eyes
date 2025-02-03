@@ -2,17 +2,17 @@
 {
 	public class CartViewDto
 	{
-		public int CartItemId { get; set; }
+		public int ProductId { get; set; }
 
-		public int? UserId { get; set; }
-
-		public int? ProductId { get; set; }
+		public int ColorId { get; set; }
 
 		public int Quantity { get; set; }
 
 		public string Name { get; set; } = null!;
 
 		public string? MainImage { get; set; }
+
+		public string ColorName { get; set; } = null!;
 
 		public decimal Price { get; set; }
 
