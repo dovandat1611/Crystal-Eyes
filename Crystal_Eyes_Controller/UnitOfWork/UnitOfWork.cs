@@ -9,7 +9,6 @@ namespace Crystal_Eyes_Controller.UnitOfWork
 		private readonly CrystalEyesDbContext _dbContext;
 
 		private IAdminRepository _adminRepository;
-		private ICartRepository _cartRepository;
 		private ICategoryRepository _categoryRepository;
 		private IColorRepository _colorRepository;
 		private ICustomerRepository _customerRepository;
@@ -21,7 +20,6 @@ namespace Crystal_Eyes_Controller.UnitOfWork
 		private IProductRepository _productRepository;
 		private IUserRepository _userRepository;
 		private IUserOtpRepository _userOtpRepository;
-		private IWishlistRepository _wishlistRepository;
 
 		public UnitOfWork(CrystalEyesDbContext dbContext)
 		{
@@ -29,8 +27,6 @@ namespace Crystal_Eyes_Controller.UnitOfWork
 		}
 
 		public IAdminRepository Admin => _adminRepository ??= new AdminRepository(_dbContext);
-
-		public ICartRepository Cart => _cartRepository ??= new CartRepository(_dbContext);
 
 		public ICategoryRepository Category => _categoryRepository ??= new CategoryRepository(_dbContext);
 
@@ -53,8 +49,6 @@ namespace Crystal_Eyes_Controller.UnitOfWork
 		public IUserRepository User => _userRepository ??= new UserRepository(_dbContext);
 
 		public IUserOtpRepository UserOtp => _userOtpRepository ??= new UserOtpRepository(_dbContext);
-
-		public IWishlistRepository Wishlist => _wishlistRepository ??= new WishlistRepository(_dbContext);
 
 		public async Task<int> SaveChangesAsync()
 		{

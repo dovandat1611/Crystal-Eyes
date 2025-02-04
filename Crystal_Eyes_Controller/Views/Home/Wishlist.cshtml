@@ -2,3 +2,73 @@
     ViewData["Title"] = "Crytal Eyes | Yêu thích";
     Layout = "_CustomerLayout";
 }
+
+
+<!-- breadcrumb -->
+<section class="bg-img1 txt-center p-lr-15 p-b-50">
+	<h3 class="ltext-105 txt-center">
+		Yêu thích &#128150;
+	</h3>
+</section>
+
+
+
+<!-- Product -->
+<section class="bg0 p-t-23 p-b-140">
+	<div class="container">
+
+		<div class="row isotope-grid" id="searchResults">
+
+			@if (ViewBag.Products != null && ViewBag.Products.Count > 0)
+			{
+				@foreach (var item in ViewBag.Products as List<ProductViewDto>)
+				{
+					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
+						<!-- Block2 -->
+						<div class="block-2">
+							<div class="block2-pic hov-img0 custom-rounded-medium label-discount"
+								 data-label="Giảm @(item.Discount.HasValue ? (item.Discount % 1 == 0 ? Math.Floor(item.Discount.Value).ToString("F0") : item.Discount.Value.ToString("F2")) : "0")%">
+								<img src="@item.MainImage"
+									 class="img-fluid rounded" alt="IMG-PRODUCT">
+							</div>
+
+							<div class="block2-txt flex-w flex-t p-t-14">
+								<div class="block2-txt-child1 flex-col-l">
+									<a href="/product-detail/@item.ProductId" style="font-size: 18px;" class="stext-110 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+										@item.Name
+									</a>
+
+									@if (item.Discount > 0)
+									{
+										<div class="price-container">
+											<span class="stext-105 cl3 old-price formatprice">@item.Price</span>
+											<span class="stext-105 cl3 current-price formatprice" style="font-size: 18px;">@(item.Price * (100 - item.Discount) / 100)</span>
+										</div>
+									}
+									else
+									{
+										<div class="price-container">
+											<span class="stext-105 cl3 current-price formatprice" style="font-size: 18px;">@item.Price</span>
+										</div>
+									}
+								</div>
+
+								<div class="block2-txt-child2 flex-r p-t-3">
+									<div class="btn-addwish-b2 dis-block pos-relative addwishlist @(item.IsWishlist == true ? "js-addedwish-b2" : "js-addwish-b2")"
+										 data-product-id="@item.ProductId">
+										<img class="icon-heart1 dis-block trans-04" src="~/customersite/images/icons/icon-heart-01.png" alt="ICON">
+										<img class="icon-heart2 dis-block trans-04 ab-t-l" src="~/customersite/images/icons/icon-heart-02.png" alt="ICON">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			}
+			else
+			{
+				<h3 class="p-b-240 p-t-60 isotope-item text-center"><i class="zmdi zmdi-search"></i> Không có mục yêu thích nào.</h3>
+			}
+		</div>
+	</div>
+</section>

@@ -19,3 +19,4 @@ public partial class Customer
 
 	public virtual User User { get; set; } = null!;
 }
+

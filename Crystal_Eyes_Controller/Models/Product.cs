@@ -27,8 +27,6 @@ public partial class Product
 
 	public bool? IsDelete { get; set; }
 
-	public virtual ICollection<Cart> Carts { get; } = new List<Cart>();
-
 	public virtual Category? Category { get; set; }
 
 	public virtual ICollection<Color> Colors { get; } = new List<Color>();
@@ -38,6 +36,4 @@ public partial class Product
 	public virtual ICollection<Image> Images { get; } = new List<Image>();
 
 	public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
-
-	public virtual ICollection<Wishlist> Wishlists { get; } = new List<Wishlist>();
 }

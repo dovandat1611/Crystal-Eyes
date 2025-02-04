@@ -18,18 +18,18 @@ namespace Crystal_Eyes_Controller.Middleware
 
             if (unitOfWork == null)
             {
-                context.Result = new RedirectToActionResult("Login", "Home", null);
+                context.Result = new RedirectToActionResult("Login", "Authentication", null);
                 return;
             }
 
             if (string.IsNullOrEmpty(customerCookie))
             {
                 var publicActions = new List<string> { "Login", "Register", "ForgotPassword", "OTP", "Index", "Shop",
-                    "ProductDetail", "Verify", "Register", "ResetPassword", "Checkout"};
+                    "ProductDetail", "Verify", "Register", "ResetPassword", "Checkout", "Wishlist"};
 
                 if (controllerName == "Admin" || controllerName == "Customer" || !publicActions.Contains(actionName))
                 {
-                    context.Result = new RedirectToActionResult("Login", "Home", null);
+                    context.Result = new RedirectToActionResult("Login", "Authentication", null);
                     return;
                 }
 
@@ -42,7 +42,7 @@ namespace Crystal_Eyes_Controller.Middleware
 
             if (user == null)
             {
-                context.Result = new RedirectToActionResult("Login", "Home", null);
+                context.Result = new RedirectToActionResult("Login", "Authentication", null);
                 return;
             }
 

@@ -89,7 +89,7 @@
 								<i class="zmdi zmdi-shopping-cart"></i>
 							</div>
 
-							<a href="/customer/wish-list" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti totalWishlistData" data-notify="@ViewBag.TotalWishList">
+							<a href="/wish-list" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti totalWishlistData" data-notify="@ViewBag.TotalWishList">
 								<i class="zmdi zmdi-favorite-outline"></i>
 							</a>
 						}
@@ -99,7 +99,7 @@
 								<i class="zmdi zmdi-shopping-cart"></i>
 							</div>
 
-							<a href="/customer/wish-list" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti totalWishlistData" data-notify="@ViewBag.TotalWishList">
+							<a href="/wish-list" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti totalWishlistData" data-notify="@ViewBag.TotalWishList">
 								<i class="zmdi zmdi-favorite-outline"></i>
 							</a>
 
@@ -223,6 +223,24 @@
 
     @RenderBody()
 
+	<!-- Loading Popup Modal -->
+	<div id="loading-popup" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 9999;">
+		<div style="background: #ffffff; padding: 30px; border-radius: 10px; text-align: center;">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" style="width: 100px; height: 100px;">
+				<circle fill="#6C7AE0" stroke="#6C7AE0" stroke-width="15" r="15" cx="40" cy="100">
+					<animate attributeName="opacity" calcMode="spline" dur="2s" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4s"></animate>
+				</circle>
+				<circle fill="#6C7AE0" stroke="#6C7AE0" stroke-width="15" r="15" cx="100" cy="100">
+					<animate attributeName="opacity" calcMode="spline" dur="2s" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2s"></animate>
+				</circle>
+				<circle fill="#6C7AE0" stroke="#6C7AE0" stroke-width="15" r="15" cx="160" cy="100">
+					<animate attributeName="opacity" calcMode="spline" dur="2s" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0s"></animate>
+				</circle>
+			</svg>
+		</div>
+	</div>
+
+	<!-- Your main content goes here -->
 	<!-- Footer -->
 	<footer class="bg3 p-t-75 p-b-32 custom-rounded-small">
 		<div class="container rounded-4">
@@ -292,6 +310,17 @@
 	<!--===============================================================================================-->
 	<script src="~/customersite/vendor/sweetalert/sweetalert.min.js"></script>
 	<script>
+
+		// Show the loading popup
+		function showLoadingPopup() {
+			document.getElementById('loading-popup').style.display = 'flex';
+		}
+
+		// Hide the loading popup
+		function hideLoadingPopup() {
+			document.getElementById('loading-popup').style.display = 'none';
+		}
+
 		$(document).ready(function () {
 			$('.addwishlist').on('click', function (e) {
 				e.preventDefault();
@@ -300,11 +329,16 @@
 				const $this = $(this); // Lưu tham chiếu đến phần tử hiện tại
 				var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
 
+				showLoadingPopup();
+
 				// Gửi yêu cầu Ajax
 				$.ajax({
 					url: `/wish-list-process/${productId}`,
 					method: "GET",
 					success: function (response) {
+
+						hideLoadingPopup();
+
 						// Hiển thị thông báo
 						swal(nameProduct, response.message, "success");
 
@@ -313,6 +347,11 @@
 							$this.addClass('js-addedwish-b2');
 							$this.removeClass('js-addwish-b2');
 						} else if (response.action === "Delete") {
+							// nếu ở trang /wish-list thì sẽ load lại trang
+							if (window.location.pathname === "/wish-list") {
+								location.reload();
+							}
+
 							$this.addClass('js-addwish-b2');
 							$this.removeClass('js-addedwish-b2');
 						}
@@ -332,14 +371,42 @@
 		});
 
 
-		$('.js-addwish-detail').each(function () {
+		$('.addwish-product-detail').on('click', function (e) {
+			e.preventDefault();
+
 			var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
 
-			$(this).on('click', function () {
-				swal(nameProduct, "is added to wishlist !", "success");
+			const productId = $(this).data('product-id'); 
+			const $this = $(this); 
+			showLoadingPopup();
+			// Gửi yêu cầu Ajax
+			$.ajax({
+				url: `/wish-list-process/${productId}`,
+				method: "GET",
+				success: function (response) {
+					hideLoadingPopup();
+					// Hiển thị thông báo
+					swal(nameProduct, response.message, "success");
 
-				$(this).addClass('js-addedwish-detail');
-				$(this).off('click');
+					// Cập nhật giao diện icon heart
+					if (response.action === "Create") {
+						$this.addClass('js-addedwish-detail');
+						$this.removeClass('js-addwish-detail');
+					} else if (response.action === "Delete") {
+						$this.addClass('js-addwish-detail');
+						$this.removeClass('js-addedwish-detail');
+					}
+
+					// Cập nhật số lượng Wishlist trên header
+					if (response.totalWishlist !== undefined) {
+						const wishlistIcon = document.querySelector('.totalWishlistData');
+						wishlistIcon.setAttribute('data-notify', response.totalWishlist);
+					}
+
+				},
+				error: function () {
+					swal("Lỗi", "Đã xảy ra lỗi, vui lòng thử lại sau!", "error");
+				}
 			});
 		});
 

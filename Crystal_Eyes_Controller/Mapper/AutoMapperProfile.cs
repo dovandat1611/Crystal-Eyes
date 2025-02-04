@@ -30,27 +30,8 @@ namespace Crystal_Eyes_Controller.Mapper
 				.ForMember(dest => dest.Address, opt => opt.MapFrom(src =>
 					src.Customer != null && src.Customer.Address != null ? src.Customer.Address : null));
 
-			CreateMap<Cart, CartViewDto>()
-				.ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
-					src.Product != null ? src.Product.Name : null))
-				.ForMember(dest => dest.MainImage, opt => opt.MapFrom(src =>
-					src.Product != null ? src.Product.MainImage : null))
-				.ForMember(dest => dest.Price, opt => opt.MapFrom(src =>
-					src.Product != null
-					? (src.Product.Discount > 0
-						? src.Product.Price * (100 - src.Product.Discount) / 100
-						: src.Product.Price)
-					: 0))
-				.ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src =>
-					src.Product != null
-					? (src.Product.Discount > 0
-						? src.Product.Price * (100 - src.Product.Discount) / 100
-						: src.Product.Price) * src.Quantity
-					: 0));
 
-			CreateMap<Product, ProductViewDto>()
-				.ForMember(dest => dest.IsWishlist, opt => opt.MapFrom(src =>
-					src.Wishlists != null && src.Wishlists.Any()));
+			CreateMap<Product, ProductViewDto>().ReverseMap();
 
 			CreateMap<Product, ProductDetailViewDto>()
 				.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src =>

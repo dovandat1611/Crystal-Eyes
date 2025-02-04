@@ -23,8 +23,6 @@ public partial class User
 
 	public virtual Admin? Admin { get; set; }
 
-	public virtual ICollection<Cart> Carts { get; } = new List<Cart>();
-
 	public virtual Customer? Customer { get; set; }
 
 	public virtual ICollection<ExternalLogin> ExternalLogins { get; } = new List<ExternalLogin>();
@@ -34,7 +32,4 @@ public partial class User
 	public virtual ICollection<Order> Orders { get; } = new List<Order>();
 
 	public virtual ICollection<UserOtp> UserOtps { get; } = new List<UserOtp>();
-
-	public virtual ICollection<Wishlist> Wishlists { get; } = new List<Wishlist>();
 }
-

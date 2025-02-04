@@ -175,11 +175,7 @@ namespace Crystal_Eyes_Controller.Controllers
 			return RedirectToAction("OTP", "Home");
 		}
 
-		[HttpGet("checkout")]
-		public IActionResult Checkout()
-		{
-			return View();
-		}
+
 
 		[HttpGet("verify-otp")]
 		public async Task<IActionResult> OTP()
@@ -229,7 +225,6 @@ namespace Crystal_Eyes_Controller.Controllers
 			TempData["Email"] = email;
 			return RedirectToAction("ResetPassword", "Home");
 		}
-
 
 
 		[HttpGet("reset-password")]

@@ -106,33 +106,24 @@
 									</div>
 								</div>
 
-
-								@if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
-								{
 									<button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail custom-rounded-s-small add-to-cart">
 										Thêm vào giỏ hàng
 									</button>
-								}
-								else
-								{
-									<a href="/login" class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 custom-rounded-s-small">
-										Đăng nhập để đặt
-									</a>
-								}
+								
 							</div>
 						</div>
 					</div>
 
 					<!--  -->
 					<div class="flex-w flex-m p-l-100 p-t-40 respon7">
-						@if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
-						{
-							<div class="flex-m bor9 p-r-10 m-r-11">
-								<a href="#" class="fs-20 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Thêm vào yêu thích">
+						<div class="flex-m bor9 p-r-10 m-r-11">
+							<a href="" class="fs-20 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2  addwish-product-detail 
+							tooltip100 @(ViewBag.ProductDetail.IsWishlist == true ? "js-addedwish-detail" : "js-addwish-detail")"
+							data-product-id="@ViewBag.ProductDetail.ProductId"
+							data-tooltip="Thêm vào yêu thích">
 									<i class="zmdi zmdi-favorite"></i>
 								</a>
-							</div>
-						}
+						</div>
 						<a href="https://www.facebook.com/dovandaatt" target="_blank" class="fs-20 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
 							<i class="fa fa-facebook"></i>
 						</a>

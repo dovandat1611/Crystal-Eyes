@@ -23,6 +23,7 @@ using Crystal_Eyes_Controller.Dtos.Feedback;
 using System;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
@@ -43,13 +44,12 @@ namespace Crystal_Eyes_Controller.Controllers
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-
 		[HttpGet]
 		public async Task<IActionResult> Index(string search = "best-seller")
         {
 			var httpContext = _httpContextAccessor.HttpContext;
 
-			var products = _unitOfWork.Product.Queryable().Include(x => x.Wishlists).Include(p => p.OrderDetails).Include(x => x.Colors)
+			var products = _unitOfWork.Product.Queryable().Include(p => p.OrderDetails).Include(x => x.Colors)
 			.Include(p => p.Feedbacks).Where(p => p.IsDelete == false && p.IsActive == true);
 
 			switch (search)
@@ -89,26 +89,15 @@ namespace Crystal_Eyes_Controller.Controllers
 		{
 			var httpContext = _httpContextAccessor.HttpContext;
 
-			var products = _unitOfWork.Product.Queryable().Include(x => x.Wishlists).Include(p => p.OrderDetails).Include(x => x.Colors)
+			var products = _unitOfWork.Product.Queryable().Include(p => p.OrderDetails).Include(x => x.Colors)
 			.Include(p => p.Feedbacks).Where(p => p.IsDelete == false && p.IsActive == true);
 
-			var colors = await _unitOfWork.Color.Queryable().Select(x => x.ColorName).Distinct().ToListAsync();
+			var colors = await _unitOfWork.Color.Queryable()
+				.Select(c => new { c.ColorPath, c.ColorName }) // Chọn trường cần lấy
+				.Distinct()  // Lọc trùng lặp dựa trên ColorName
+				.ToListAsync();
 
 			var categories = await _unitOfWork.Category.Queryable().ToListAsync();
-
-			if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
-			{
-				int userId = int.Parse(ViewBag.UserId.ToString());
-
-				var carts = await _unitOfWork.Cart.Queryable().Include(x => x.Product).Where(x => x.UserId == userId).ToListAsync();
-
-				var cartsDto = _mapper.Map<List<CartViewDto>>(carts);
-
-				var totalAmount = cartsDto.Sum(x => x.TotalPrice);
-
-				ViewBag.Carts = cartsDto;
-				ViewBag.TotalAmount = totalAmount;
-			}
 
 			if (category > 0 || menu != null || price != null || sort != null || color != null)
 			{
@@ -204,7 +193,7 @@ namespace Crystal_Eyes_Controller.Controllers
 		{
 			var httpContext = _httpContextAccessor.HttpContext;
 
-			var productsQuery = _unitOfWork.Product.Queryable().Include(x => x.Wishlists).Include(p => p.OrderDetails).Include(x => x.Colors)
+			var productsQuery = _unitOfWork.Product.Queryable().Include(p => p.OrderDetails).Include(x => x.Colors)
 			.Include(p => p.Feedbacks).Where(p => p.IsDelete == false && p.IsActive == true);
 			var colors = await _unitOfWork.Color.Queryable().Select(x => x.ColorName).Distinct().ToListAsync();
 
@@ -226,20 +215,6 @@ namespace Crystal_Eyes_Controller.Controllers
 			var products = await productsQuery.ToListAsync();
 
 			var categories = await _unitOfWork.Category.Queryable().ToListAsync();
-
-			if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
-			{
-				int userId = int.Parse(ViewBag.UserId.ToString());
-
-				var carts = await _unitOfWork.Cart.Queryable().Include(x => x.Product).Where(x => x.UserId == userId).ToListAsync();
-
-				var cartsDto = _mapper.Map<List<CartViewDto>>(carts);
-
-				var totalAmount = cartsDto.Sum(x => x.TotalPrice);
-
-				ViewBag.Carts = cartsDto;
-				ViewBag.TotalAmount = totalAmount;
-			}
 
 			var wishlist = httpContext.Items["WishList"] as List<int>;
 
@@ -268,7 +243,6 @@ namespace Crystal_Eyes_Controller.Controllers
 			var httpContext = _httpContextAccessor.HttpContext;
 
 			var product = await _unitOfWork.Product.Queryable()
-				.Include(x => x.Wishlists)
 				.Include(x => x.Category)
 				.Where(p => p.IsDelete == false && p.IsActive == true)
 				.FirstOrDefaultAsync(x => x.ProductId == productId);
@@ -280,7 +254,6 @@ namespace Crystal_Eyes_Controller.Controllers
 
 
 			var relatedProduct = await _unitOfWork.Product.Queryable()
-				.Include(x => x.Wishlists)
 				.Include(x => x.Category)
 				.Where(p => p.IsDelete == false && p.IsActive == true && p.CategoryId == product.CategoryId).ToListAsync();
 
@@ -313,5 +286,47 @@ namespace Crystal_Eyes_Controller.Controllers
 			return View();
 		}
 
+		[HttpGet("wish-list")]
+		public async Task<IActionResult> Wishlist()
+		{
+			var httpContext = _httpContextAccessor.HttpContext;
+
+			var productWishlist = new List<Product>();
+
+			var wishlist = httpContext.Items["WishList"] as List<int>;
+
+			if (wishlist.Count > 0)
+			{
+				foreach (var item in wishlist)
+				{
+					var product = await _unitOfWork.Product.Queryable()
+						.Include(x => x.Category)
+						.Where(p => p.IsDelete == false && p.IsActive == true)
+						.FirstOrDefaultAsync(x => x.ProductId == item);
+					
+					if(product != null)
+					{
+						productWishlist.Add(product);
+					}
+				}
+
+				if(productWishlist.Count > 0)
+				{
+					var productDto = _mapper.Map<List<ProductViewDto>>(productWishlist);
+					foreach (var p in productDto)
+					{
+						p.IsWishlist = true;
+					}
+					ViewBag.Products = productDto;
+				}
+			}
+			return View();
+		}
+
+		[HttpGet("checkout")]
+		public IActionResult Checkout()
+		{
+			return View();
+		}
 	}
 }

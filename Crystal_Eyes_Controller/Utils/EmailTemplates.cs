@@ -1,4 +1,8 @@
-﻿namespace Crystal_Eyes_Controller.Utils
+﻿using Crystal_Eyes_Controller.Dtos.Cart;
+using Crystal_Eyes_Controller.Models;
+using static System.Net.WebRequestMethods;
+
+namespace Crystal_Eyes_Controller.Utils
 {
 	public class EmailTemplates
 	{
@@ -77,6 +81,92 @@
 			";
 
 		}
+
+		public static string ADD_ORDER(Order order, List<CartViewDto> orderDetails)
+		{
+			// Nếu không có yêu cầu, gán giá trị "Không có"
+			if (string.IsNullOrEmpty(order.ContentReservation))
+			{
+				order.ContentReservation = "Không có";
+			}
+
+			string orderDetailsHtml = "";
+
+			// Tạo HTML cho chi tiết đơn hàng
+			foreach (var detail in orderDetails)
+			{
+				string formattedPrice = string.Format("{0:N0} VND", detail.Price);
+				string formattedTotal = string.Format("{0:N0} VND", detail.TotalPrice);
+
+				orderDetailsHtml += $@"
+            <tr>
+                <td style=""border: 1px solid #ddd; padding: 12px; text-align: center;"">
+                    <img src=""{detail.MainImage}"" alt=""{detail.Name}"" style=""width: 50px; height: 50px; border-radius: 10px;"">
+                </td>
+                <td style=""border: 1px solid #ddd; padding: 12px; text-align: center;"">{detail.Name}</td>
+                <td style=""border: 1px solid #ddd; padding: 12px; text-align: center;"">{detail.ColorName}</td>
+                <td style=""border: 1px solid #ddd; padding: 12px; text-align: center;"">{detail.Quantity}</td>
+                <td style=""border: 1px solid #ddd; padding: 12px; text-align: center;"">{formattedPrice}</td>
+                <td style=""border: 1px solid #ddd; padding: 12px; text-align: center;"">{formattedTotal}</td>
+            </tr>";
+			}
+
+			return $@"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+    <title>Xác thực tài khoản</title>
+</head>
+<body style=""font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;"">
+    <div style=""margin: 20px auto; max-width: 600px; width: 100%; background-color: #ffffff; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); overflow: hidden; border-radius: 20px;"">
+        <!-- Header -->
+        <div style=""background-color: #000000; padding: 20px; text-align: center; color: #ffffff; font-size: 1.5rem; font-weight: bold;"">
+            Thông tin đơn hàng
+        </div>
+        
+        <!-- Content -->
+        <div style=""padding: 20px; text-align: center; color: #000000;"">
+            <div style=""background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 8px rgba(8, 120, 211, 0.1); text-align: left;"">
+                
+                <!-- Order Info -->
+                <div class=""order-info"">
+                    <p style=""margin: 10px 0; font-size: 16px; font-weight: bold;"">Họ tên người nhận: <span style=""font-weight: normal;"">{order.NameReceiver}</span></p>
+                    <p style=""margin: 10px 0; font-size: 16px; font-weight: bold;"">Số điện thoại: <span style=""font-weight: normal;"">{order.PhoneReceiver}</span></p>
+                    <p style=""margin: 10px 0; font-size: 16px; font-weight: bold;"">Địa chỉ nhận hàng: <span style=""font-weight: normal;"">{order.AddressReceiver}</span></p>
+                    <p style=""margin: 10px 0; font-size: 16px; font-weight: bold;"">Yêu cầu: <span style=""font-weight: normal;"">{order.ContentReservation}</span></p>
+                    <p style=""margin: 10px 0; font-size: 16px; font-weight: bold;"">Tổng số tiền: <span style=""font-weight: normal;"">{string.Format("{0:N0} VND", order.TotalAmount)}</span></p>
+                </div>
+
+                <!-- Order Detail Table -->
+                <table style=""width: 100%; border-collapse: collapse; margin-top: 20px;"">
+                    <thead>
+                        <tr>
+                            <th style=""border: 1px solid #ddd; padding: 12px; text-align: center; background-color: #f1f1f1;"">Ảnh</th>
+                            <th style=""border: 1px solid #ddd; padding: 12px; text-align: center; background-color: #f1f1f1;"">Tên sản phẩm</th>
+                            <th style=""border: 1px solid #ddd; padding: 12px; text-align: center; background-color: #f1f1f1;"">Màu sắc</th>
+                            <th style=""border: 1px solid #ddd; padding: 12px; text-align: center; background-color: #f1f1f1;"">Số lượng</th>
+                            <th style=""border: 1px solid #ddd; padding: 12px; text-align: center; background-color: #f1f1f1;"">Giá</th>
+                            <th style=""border: 1px solid #ddd; padding: 12px; text-align: center; background-color: #f1f1f1;"">Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orderDetailsHtml}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style=""background-color: #000000; padding: 10px; text-align: center; color: #ffffff; font-size: 0.875rem; font-weight: bold;"">
+            © <script>document.write(new Date().getFullYear());</script> | Bản quyền thuộc về Crystal Eyes.
+        </div>
+    </div>
+</body>
+</html>";
+		}
+
+
 
 	}
 }

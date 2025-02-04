@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "w5fEt2Dt28Jrw9uEnjE9vyr/AI00Z14rz1uJ8NYbl+Q=",
+  "Hash": "8la4KQNZ3pOfMLveRjgdd24qfhCr1Unli9z6YKpQTaY=",
   "Source": "Crystal_Eyes_Controller",
   "BasePath": "_content/Crystal_Eyes_Controller",
   "Mode": "Default",
@@ -1734,6 +1734,23 @@
       "OriginalItemSpec": "wwwroot\\customersite\\fonts\\Poppins\\Poppins-ThinItalic.ttf"
     },
     {
+      "Identity": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\ashin.jpg",
+      "SourceId": "Crystal_Eyes_Controller",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\",
+      "BasePath": "_content/Crystal_Eyes_Controller",
+      "RelativePath": "customersite/images/ashin.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\customersite\\images\\ashin.jpg"
+    },
+    {
       "Identity": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\banner.png",
       "SourceId": "Crystal_Eyes_Controller",
       "SourceType": "Discovered",
@@ -1919,23 +1936,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\customersite\\images\\mid.png"
-    },
-    {
-      "Identity": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\owner.jpg",
-      "SourceId": "Crystal_Eyes_Controller",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\",
-      "BasePath": "_content/Crystal_Eyes_Controller",
-      "RelativePath": "customersite/images/owner.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\customersite\\images\\owner.jpg"
     },
     {
       "Identity": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\customersite\\images\\right.png",

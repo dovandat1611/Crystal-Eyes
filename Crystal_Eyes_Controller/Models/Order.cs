@@ -17,8 +17,6 @@ public partial class Order
 
 	public string? ContentReservation { get; set; }
 
-	public string? TypeOrder { get; set; }
-
 	public string OrderStatus { get; set; } = null!;
 
 	public decimal TotalAmount { get; set; }
@@ -35,9 +33,8 @@ public partial class Order
 
 	public string? CancelReason { get; set; }
 
-	public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
-
 	public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
 
 	public virtual User? User { get; set; }
 }
+

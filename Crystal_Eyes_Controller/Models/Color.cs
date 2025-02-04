@@ -9,6 +9,8 @@ public partial class Color
 
 	public int? ProductId { get; set; }
 
+	public string ColorPath { get; set; } = null!;
+
 	public string ColorName { get; set; } = null!;
 
 	public bool? IsDelete { get; set; }
