@@ -108,6 +108,7 @@ namespace Crystal_Eyes_Controller.Controllers
 				{
 					OrderId = addOrder.OrderId,
 					ProductId = item.ProductId,
+					ColorId = item.ColorId,
 					Price = item.Price,
 					Quantity = item.Quantity,
 					TotalPrice = item.TotalPrice

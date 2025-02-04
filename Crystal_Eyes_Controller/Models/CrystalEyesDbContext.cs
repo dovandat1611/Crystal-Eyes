@@ -43,7 +43,7 @@ public partial class CrystalEyesDbContext : DbContext
 	{
 		modelBuilder.Entity<Admin>(entity =>
 		{
-			entity.HasKey(e => e.UserId).HasName("PK__Admin__B9BE370F08E97B4E");
+			entity.HasKey(e => e.UserId).HasName("PK__Admin__B9BE370F00FEF33E");
 
 			entity.ToTable("Admin");
 
@@ -71,7 +71,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<Category>(entity =>
 		{
-			entity.HasKey(e => e.CategoryId).HasName("PK__Category__D54EE9B45BD2B21B");
+			entity.HasKey(e => e.CategoryId).HasName("PK__Category__D54EE9B442B63B6D");
 
 			entity.ToTable("Category");
 
@@ -90,7 +90,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<Color>(entity =>
 		{
-			entity.HasKey(e => e.ColorId).HasName("PK__Color__1143CECB5C6D98F7");
+			entity.HasKey(e => e.ColorId).HasName("PK__Color__1143CECBDF3ADA38");
 
 			entity.ToTable("Color");
 
@@ -113,7 +113,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<Customer>(entity =>
 		{
-			entity.HasKey(e => e.UserId).HasName("PK__Customer__B9BE370FEB7F137D");
+			entity.HasKey(e => e.UserId).HasName("PK__Customer__B9BE370F6F951238");
 
 			entity.ToTable("Customer");
 
@@ -140,7 +140,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<ExternalLogin>(entity =>
 		{
-			entity.HasKey(e => e.ExloginId).HasName("PK__External__A73699D979FAD069");
+			entity.HasKey(e => e.ExloginId).HasName("PK__External__A73699D95A669FF5");
 
 			entity.ToTable("External_Logins");
 
@@ -161,7 +161,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<Feedback>(entity =>
 		{
-			entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8C6AFD9CC1");
+			entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__7A6B2B8CB3CD9BA9");
 
 			entity.ToTable("Feedback");
 
@@ -180,16 +180,16 @@ public partial class CrystalEyesDbContext : DbContext
 
 			entity.HasOne(d => d.Product).WithMany(p => p.Feedbacks)
 				.HasForeignKey(d => d.ProductId)
-				.HasConstraintName("FK__Feedback__produc__52593CB8");
+				.HasConstraintName("FK__Feedback__produc__534D60F1");
 
 			entity.HasOne(d => d.User).WithMany(p => p.Feedbacks)
 				.HasForeignKey(d => d.UserId)
-				.HasConstraintName("FK__Feedback__user_i__534D60F1");
+				.HasConstraintName("FK__Feedback__user_i__5441852A");
 		});
 
 		modelBuilder.Entity<Image>(entity =>
 		{
-			entity.HasKey(e => e.ImageId).HasName("PK__Image__DC9AC955B04F68E8");
+			entity.HasKey(e => e.ImageId).HasName("PK__Image__DC9AC9551C1FAD98");
 
 			entity.ToTable("Image");
 
@@ -209,7 +209,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<Order>(entity =>
 		{
-			entity.HasKey(e => e.OrderId).HasName("PK__Order__4659622998BBA729");
+			entity.HasKey(e => e.OrderId).HasName("PK__Order__46596229F775EADC");
 
 			entity.ToTable("Order");
 
@@ -255,11 +255,12 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<OrderDetail>(entity =>
 		{
-			entity.HasKey(e => e.OrderDetailId).HasName("PK__Order_De__3C5A40803776BB6A");
+			entity.HasKey(e => e.OrderDetailId).HasName("PK__Order_De__3C5A408066995207");
 
 			entity.ToTable("Order_Detail");
 
 			entity.Property(e => e.OrderDetailId).HasColumnName("order_detail_id");
+			entity.Property(e => e.ColorId).HasColumnName("color_id");
 			entity.Property(e => e.OrderId).HasColumnName("order_id");
 			entity.Property(e => e.Price)
 				.HasColumnType("decimal(18, 2)")
@@ -270,6 +271,10 @@ public partial class CrystalEyesDbContext : DbContext
 				.HasComputedColumnSql("([price]*[quantity])", true)
 				.HasColumnType("decimal(29, 2)")
 				.HasColumnName("total_price");
+
+			entity.HasOne(d => d.Color).WithMany(p => p.OrderDetails)
+				.HasForeignKey(d => d.ColorId)
+				.HasConstraintName("FK__Order_Det__color__4F7CD00D");
 
 			entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
 				.HasForeignKey(d => d.OrderId)
@@ -282,7 +287,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<Product>(entity =>
 		{
-			entity.HasKey(e => e.ProductId).HasName("PK__Product__47027DF5912127D8");
+			entity.HasKey(e => e.ProductId).HasName("PK__Product__47027DF5049205F2");
 
 			entity.ToTable("Product");
 
@@ -320,11 +325,11 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<User>(entity =>
 		{
-			entity.HasKey(e => e.UserId).HasName("PK__User__B9BE370F9A00FBBA");
+			entity.HasKey(e => e.UserId).HasName("PK__User__B9BE370F256C4141");
 
 			entity.ToTable("User");
 
-			entity.HasIndex(e => e.Email, "UQ__User__AB6E61646FE11BBD").IsUnique();
+			entity.HasIndex(e => e.Email, "UQ__User__AB6E6164F132522D").IsUnique();
 
 			entity.Property(e => e.UserId).HasColumnName("user_id");
 			entity.Property(e => e.CreatedAt)
@@ -353,7 +358,7 @@ public partial class CrystalEyesDbContext : DbContext
 
 		modelBuilder.Entity<UserOtp>(entity =>
 		{
-			entity.HasKey(e => e.OtpId).HasName("PK__User_OTP__AEE35435D70FFBE0");
+			entity.HasKey(e => e.OtpId).HasName("PK__User_OTP__AEE35435B8E6A1E2");
 
 			entity.ToTable("User_OTP");
 

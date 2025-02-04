@@ -15,5 +15,7 @@ public partial class Color
 
 	public bool? IsDelete { get; set; }
 
+	public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
+
 	public virtual Product? Product { get; set; }
 }
