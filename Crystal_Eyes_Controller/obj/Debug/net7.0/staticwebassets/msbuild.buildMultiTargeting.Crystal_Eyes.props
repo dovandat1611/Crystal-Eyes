@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Crystal_Eyes.props" />
+</Project>

@@ -1,8 +1,8 @@
 {
   "Files": [
     {
-      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\Crystal_Eyes_Controller.bundle.scp.css",
-      "PackagePath": "staticwebassets\\Crystal_Eyes_Controller.bundle.scp.css"
+      "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\Crystal_Eyes.bundle.scp.css",
+      "PackagePath": "staticwebassets\\Crystal_Eyes.bundle.scp.css"
     },
     {
       "Id": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\wwwroot\\css\\site.css",
@@ -1045,20 +1045,20 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.Crystal_Eyes_Controller.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.Crystal_Eyes.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.Crystal_Eyes_Controller.props",
-      "PackagePath": "build\\Crystal_Eyes_Controller.props"
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.Crystal_Eyes.props",
+      "PackagePath": "build\\Crystal_Eyes.props"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.Crystal_Eyes_Controller.props",
-      "PackagePath": "buildMultiTargeting\\Crystal_Eyes_Controller.props"
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.Crystal_Eyes.props",
+      "PackagePath": "buildMultiTargeting\\Crystal_Eyes.props"
     },
     {
-      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.Crystal_Eyes_Controller.props",
-      "PackagePath": "buildTransitive\\Crystal_Eyes_Controller.props"
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.Crystal_Eyes.props",
+      "PackagePath": "buildTransitive\\Crystal_Eyes.props"
     }
   ],
   "ElementsToRemove": []

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAdKA0Q6Ud0kGH5HSniILQMQAAAAACAAAAAAAQZgAAAAEAACAAAAA6xk8AVPUNepodRuFieKgOi1QtR+0cTfyWgpYhy46sQwAAAAAOgAAAAAIAACAAAAA7cogN6nI0blFpz3jQQ+rUFeGBUtoRXfOfeLl6Ch6FKyAAAADCtz+3Zik7/pGFvmVR7qYw8gjSud3GWUEBttsD3Tl68UAAAABFN31bfER0iV+SgDzz/tmaz8qrgvcY0iT5TCOByeXBRRwE/lAPPcSWwgGcLiwt45qF38+4MEU4uDiXtg7n0tdJ</EncryptedPassword>
+    <History>True|2025-02-05T14:47:51.4800050Z;False|2025-02-05T21:46:30.7901210+07:00;True|2025-02-05T21:45:08.7385292+07:00;True|2025-02-05T21:39:39.0178669+07:00;True|2025-02-05T21:03:58.3493541+07:00;True|2025-02-05T20:39:00.3016360+07:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="Default_Connection">
+      <Value>Data Source=SQL6030.site4now.net,1433%3bInitial Catalog=db_ab2770_ashin%3bUser Id=db_ab2770_ashin_admin%3bPassword=Dovandat123%3bTrustServerCertificate=True%3bMultipleActiveResultSets=True</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

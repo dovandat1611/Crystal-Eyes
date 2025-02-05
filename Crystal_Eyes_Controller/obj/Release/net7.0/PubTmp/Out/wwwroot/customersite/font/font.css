@@ -1,0 +1,10 @@
+@font-face {
+	font-family: 'coolveticarg';
+	src: local('coolveticarg'), url('./coolveticarg.woff') format('woff');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_10889">Text with this font applied</p> */
+.fontsforweb_fontid_10889 {
+	font-family: 'coolveticarg' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */

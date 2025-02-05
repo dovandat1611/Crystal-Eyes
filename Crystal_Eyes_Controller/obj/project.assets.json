@@ -6518,9 +6518,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\Crystal_Eyes_Controller.csproj",
-      "projectName": "Crystal_Eyes_Controller",
-      "projectPath": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\Crystal_Eyes_Controller.csproj",
+      "projectUniqueName": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\Crystal_Eyes.csproj",
+      "projectName": "Crystal_Eyes",
+      "projectPath": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\Crystal_Eyes.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
       "outputPath": "D:\\MyProjectSoftware\\Crystal_Eyes\\Crystal_Eyes_Controller\\obj\\",
       "projectStyle": "PackageReference",
