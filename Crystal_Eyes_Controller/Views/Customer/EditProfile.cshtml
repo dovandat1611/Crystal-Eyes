@@ -3,6 +3,9 @@
     Layout = "_CustomerLayout";
 }
 
+@model CustomerViewModel
+
+
 <!-- Title page -->
 <div class="container">
 	<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
@@ -26,66 +29,63 @@
 	<div class="container">
 		<div class="flex-w flex-tr justify-content-center" style="gap: 40px;">
 			<div class="size-150 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md custom-rounded-s-small">
-				
-					<div class="text-center m-b-20">
-						<img src="https://i.pinimg.com/236x/cd/cb/0c/cdcb0cb30bc700c53f12eff840156b29.jpg" alt="AVATAR" class="bor0" style="width: 100px;">
-					</div>
-					<div class="text-center m-b-20">
+				<div class="text-center m-b-20">
+					<img src="@ViewBag.User?.Image" alt="AVATAR" class="bor0" style="width: 100px;">
+				</div>
+				<div class="text-center m-b-20">
+					<span class="mtext-110 cl2">
+						@ViewBag.User?.Name
+					</span>
+				</div>
+				<div class="flex-w w-full p-b-42">
+					<span class="fs-18 cl5 txt-center size-211">
+						<span class="lnr lnr-phone-handset"></span>
+					</span>
+
+					<div class="size-212">
 						<span class="mtext-110 cl2">
-							Name
-						</span>
-					</div>
-					<div class="flex-w w-full p-b-42">
-						<span class="fs-18 cl5 txt-center size-211">
-							<span class="lnr lnr-phone-handset"></span>
+							Số điện thoại
 						</span>
 
-						<div class="size-212">
-							<span class="mtext-110 cl2">
-								Số điện thoại
-							</span>
-
-							<p class="stext-115 cl1 size-213 p-t-10">
-								+1 800 1236879
-							</p>
-						</div>
+						<p class="stext-115 cl1 size-213 p-t-10">
+							@ViewBag.User?.Phone
+						</p>
 					</div>
-					<div class="flex-w w-full p-b-42">
-						<span class="fs-18 cl5 txt-center size-211">
-							<span class="lnr lnr-envelope"></span>
+				</div>
+				<div class="flex-w w-full p-b-42">
+					<span class="fs-18 cl5 txt-center size-211">
+						<span class="lnr lnr-envelope"></span>
+					</span>
+
+					<div class="size-212">
+						<span class="mtext-110 cl2">
+							Email
 						</span>
 
-						<div class="size-212">
-							<span class="mtext-110 cl2">
-								Email
-							</span>
-
-							<p class="stext-115 cl1 size-213 p-t-10">
-								contact@example.com
-							</p>
-						</div>
+						<p class="stext-115 cl1 size-213 p-t-10">
+							@ViewBag.Email?
+						</p>
 					</div>
-					<div class="flex-w w-full p-b-42">
-						<span class="fs-18 cl5 txt-center size-211">
-							<span class="lnr lnr-map-marker"></span>
+				</div>
+				<div class="flex-w w-full p-b-42">
+					<span class="fs-18 cl5 txt-center size-211">
+						<span class="lnr lnr-map-marker"></span>
+					</span>
+
+					<div class="size-212">
+						<span class="mtext-110 cl2">
+							Địa chỉ
 						</span>
 
-						<div class="size-212">
-							<span class="mtext-110 cl2">
-								Địa chỉ
-							</span>
-
-							<p class="stext-115 cl6 size-213 p-t-10">
-								Trường đại học FPT
-							</p>
-						</div>
+						<p class="stext-115 cl6 size-213 p-t-10">
+							@ViewBag.User?.Address
+						</p>
 					</div>
-				
+				</div>
 			</div>
 
-			
-			<form>
-				<div class="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md custom-rounded-s-small">
+
+			<form asp-action="EditProfile" asp-controller="Customer" method="post" enctype="multipart/form-data" class="size-210 bor10 flex-w flex-col-m p-lr-93 p-tb-30 p-lr-15-lg w-full-md custom-rounded-s-small">
 					<div class="text-center m-b-28">
 						<span class="mtext-110 cl2" style="font-size: 28px;">
 							Thông tin
@@ -93,28 +93,51 @@
 					</div>
 
 					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
-						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="name"
-							   placeholder="Tên người dùng" readonly>
+						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text"
+					 placeholder="Tên người dùng" value="@ViewBag.User?.Name" asp-for="Name">
 						<span class="zmdi zmdi-account how-pos4 pointer-none"></span>
 					</div>
 
+					<div class="text-danger m-b-10">
+					<span asp-validation-for="Name"></span>
+					</div>
+
 					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
-						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone"
-							   placeholder="Số điện thoại" readonly>
+						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="number"
+						   placeholder="Số điện thoại" value="@ViewBag.User?.Phone" asp-for="Phone" >
 						<span class="lnr lnr-phone-handset how-pos4 pointer-none"></span>
 					</div>
-
+					<div class="text-danger m-b-10">
+					<span asp-validation-for="Phone"></span>
+					</div>
 					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
 						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="address"
-							   placeholder="Địa chỉ" readonly>
+						   placeholder="Địa chỉ" value="@ViewBag.User?.Address" asp-for="Address" >
 						<span class="lnr lnr-map-marker how-pos4 pointer-none"></span>
 					</div>
+					<div class="text-danger m-b-10">
+					<span asp-validation-for="Address"></span>
+					</div>	
+					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
+						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="date" name="dob"
+					placeholder="Sinh nhật" value="@ViewBag.User?.Dob.ToString("yyyy-MM-dd")" asp-for="Dob">
+						<span class="lnr lnr-clock how-pos4 pointer-none"></span>
+					</div>
+					<div class="text-danger m-b-10">
+						<span asp-validation-for="Dob"></span>
+					</div>
 
-					<button class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
+					<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
+						<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="file" 
+						 placeholder="Ảnh đại diện" value="@ViewBag.User?.Image" asp-for="Image">
+						<span class="lnr lnr-picture how-pos4 pointer-none"></span>
+					</div>
+
+					<button class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer" type="submit">
 						Xác nhận
 					</button>
-				</div>
-			</form>
+				</form>
+
 		</div>
 	</div>
 </section>	

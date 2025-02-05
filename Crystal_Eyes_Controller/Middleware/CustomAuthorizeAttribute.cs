@@ -56,7 +56,7 @@ namespace Crystal_Eyes_Controller.Middleware
                 //}
 
                 var authActions = new List<string> { "Login", "Register", "ForgotPassword", "OTP", "Verify", "Register", "ResetPassword" };
-                if (controllerName == "Admin" || controllerName == "Home" && authActions.Contains(actionName))
+                if (controllerName == "Admin" || controllerName == "Authentication" && authActions.Contains(actionName))
                 {
                     context.Result = new RedirectToActionResult("Index", "Home", null);
                     return;
@@ -69,13 +69,13 @@ namespace Crystal_Eyes_Controller.Middleware
                 //var customerActions = new List<string> { "Index", "Profile", "Shop", "Wishlist" };
                 //if (controllerName == "Customer" || customerActions.Contains(actionName))
                 //{
-                //	context.Result = new RedirectToActionResult("Unauthorized", "Home", null);
-                //	return;
+                //    context.Result = new RedirectToActionResult("Unauthorized", "Home", null);
+                //    return;
                 //}
 
                 // Những trang không được phép truy cập khi đã đăng nhập
                 var authActions = new List<string> { "Login", "Register", "ForgotPassword", "OTP", "Verify", "Register", "ResetPassword" };
-                if (controllerName == "Customer" || controllerName == "Home" && authActions.Contains(actionName))
+                if (controllerName == "Customer" || controllerName == "Home" || controllerName== "Authentication" && authActions.Contains(actionName))
                 {
                     context.Result = new RedirectToActionResult("Dashboard", "Admin", null);
                     return;

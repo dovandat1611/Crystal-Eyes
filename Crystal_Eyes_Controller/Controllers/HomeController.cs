@@ -24,6 +24,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using Newtonsoft.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Crystal_Eyes_Controller.Controllers
 {
@@ -55,15 +56,15 @@ namespace Crystal_Eyes_Controller.Controllers
 			switch (search)
 			{
 				case "best-seller":
-					products = products.OrderByDescending(p => p.OrderDetails.Count);
+					products = products.OrderByDescending(p => p.OrderDetails.Count).Take(8);
 					ViewBag.Search = search;
 					break;
 				case "rating":
-					products = products.OrderByDescending(p => p.Feedbacks.Any() ? p.Feedbacks.Average(f => f.Star) : 0);
+					products = products.OrderByDescending(p => p.Feedbacks.Any() ? p.Feedbacks.Average(f => f.Star) : 0).Take(8);
 					ViewBag.Search = search;
 					break;
 				case "new":
-					products = products.OrderByDescending(p => p.ProductId);
+					products = products.OrderByDescending(p => p.ProductId).Take(8);
 					ViewBag.Search = search;
 					break;
 				default:
@@ -85,7 +86,8 @@ namespace Crystal_Eyes_Controller.Controllers
         }
 
 		[HttpGet("shop")]
-		public async Task<IActionResult> Shop(int category = 0, string menu = null, string price = null, string sort = null, string color = null)
+		public async Task<IActionResult> Shop(int category = 0, string menu = null, string price = null,
+			string sort = null, string color = null, int pageNumber = 1, int pageSize = 12)
 		{
 			var httpContext = _httpContextAccessor.HttpContext;
 
@@ -93,8 +95,8 @@ namespace Crystal_Eyes_Controller.Controllers
 			.Include(p => p.Feedbacks).Where(p => p.IsDelete == false && p.IsActive == true);
 
 			var colors = await _unitOfWork.Color.Queryable()
-				.Select(c => new { c.ColorPath, c.ColorName }) // Chọn trường cần lấy
-				.Distinct()  // Lọc trùng lặp dựa trên ColorName
+				.Select(c => new { c.ColorPath, c.ColorName })
+				.Distinct()  
 				.ToListAsync();
 
 			var categories = await _unitOfWork.Category.Queryable().ToListAsync();
@@ -174,7 +176,13 @@ namespace Crystal_Eyes_Controller.Controllers
 
 			var wishlist = httpContext.Items["WishList"] as List<int>;
 
-			var productsDto = _mapper.Map<List<ProductViewDto>>(products);
+
+			var paginatedEntities = await PaginatedList<Product>
+				.CreateAsync(products.AsNoTracking(), pageNumber, pageSize);
+
+			ViewBag.Paging = paginatedEntities;
+
+			var productsDto = _mapper.Map<List<ProductViewDto>>(paginatedEntities);
 
 			foreach (var productDto in productsDto)
 			{
@@ -324,9 +332,31 @@ namespace Crystal_Eyes_Controller.Controllers
 		}
 
 		[HttpGet("checkout")]
-		public IActionResult Checkout()
+		public async Task<IActionResult> Checkout()
+		{
+			int uid = 0;
+
+			if(ViewBag.UserId != null)
+			{
+				uid = int.Parse(ViewBag.UserId);
+			}
+
+			Customer customer = new Customer();
+			if (uid != 0)
+			{
+				customer = await _unitOfWork.Customer.Queryable().FirstOrDefaultAsync(x => x.UserId == uid);
+			}
+			
+			ViewBag.CustomerInfo = customer;
+
+			return View();
+		}
+
+		[HttpGet("not-found")]
+		public IActionResult NotFound()
 		{
 			return View();
 		}
+
 	}
 }

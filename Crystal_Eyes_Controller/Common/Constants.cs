@@ -20,6 +20,7 @@
 			public static string RESET_PASSWORD = "Đặt Lại Mật Khẩu  - Crystal Eyes";
 			public static string ADD_ORDER_SUCCESS = "Đặt Hàng Thành Công - Crystal Eyes";
 			public static string NOTI_ADMIN_ORDER = "Đơn Hàng Mới - Crystal Eyes";
+			public static string ADD_FEEDBACK = "Cảm ơn bạn đã đánh giá - Crystal Eyes";
 		}
 
 	}

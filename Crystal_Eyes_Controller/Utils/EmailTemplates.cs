@@ -82,6 +82,35 @@ namespace Crystal_Eyes_Controller.Utils
 
 		}
 
+		public static string Feedback()
+		{
+			return $@"
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+                <title>Cảm ơn vì đã đánh giá sản phẩm</title>
+            </head>
+            <body style=""font-family: Arial, sans-serif;"">
+                <div style=""margin: 20px auto; max-width: 600px; width: 100%; background-color: #ffffff; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); overflow: hidden; border-radius: 20px;"">
+                    <div style=""background-color: #000000; padding: 20px; text-align: center; color: #ffffff; font-size: 1.5rem; font-weight: bold;"">
+                        Cảm ơn bạn đã đánh giá sản phẩm 🌟
+                    </div>
+                    <div style=""padding: 20px; text-align: center; color: #666666;"">
+                        <div style=""background-color: #f4f4f4; padding: 20px; border-radius: 5px; box-shadow: 0 2px 8px rgba(8, 120, 211, 0.1); text-align: left;"">
+                            <p style=""text-align: center;"">Cảm ơn bạn rất nhiều vì đã dành thời gian đánh giá sản phẩm của chúng tôi! 🙏. Chúng tôi rất trân trọng sự đóng góp của bạn và hy vọng sẽ tiếp tục phục vụ bạn trong tương lai. 💖</p>
+                        </div>
+                    </div>
+                    <div style=""background-color: #000000; padding: 10px; text-align: center; color: #ffffff; font-size: 0.875rem; font-weight: bold;"">
+                        © <script>document.write(new Date().getFullYear());</script> | Bản quyền thuộc về Crystal Eyes.
+                    </div>
+                </div>
+            </body>
+            </html>
+			";
+
+		}
+
 		public static string ADD_ORDER(Order order, List<CartViewDto> orderDetails)
 		{
 			// Nếu không có yêu cầu, gán giá trị "Không có"

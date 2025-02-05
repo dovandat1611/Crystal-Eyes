@@ -47,6 +47,9 @@ namespace Crystal_Eyes_Controller.Controllers
 					? JsonConvert.DeserializeObject<List<CartItemDto>>(cartSession)
 					: new List<CartItemDto>();
 
+				var customerCookie = httpContext?.Request.Cookies["account"];
+
+
 				if (!cart.Any())
 				{
 					return BadRequest(new { success = false, message = "Giỏ hàng trống!" });
@@ -90,11 +93,13 @@ namespace Crystal_Eyes_Controller.Controllers
 					PendingAt = DateTime.UtcNow
 				};
 
-				// Lấy userId từ Claims
-				var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-				if (userIdClaim != null)
+				if (!string.IsNullOrEmpty(customerCookie))
 				{
-					order.UserId = int.Parse(userIdClaim.Value);
+					var user = await _unitOfWork.User.Queryable().FirstOrDefaultAsync(u => u.Email == customerCookie);
+					if(user != null)
+					{
+						order.UserId = user.UserId;
+					}
 				}
 
 				var addOrder = await _unitOfWork.Order.CreateAndReturnAsync(order);

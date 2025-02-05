@@ -128,9 +128,6 @@
 			<!-- Icon header -->
 			<div class="wrap-icon-header flex-w flex-r-m m-r-15">
 
-				@if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
-				{
-
 					<div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="@ViewBag.TotalCart">
 						<i class="zmdi zmdi-shopping-cart"></i>
 					</div>
@@ -146,47 +143,62 @@
 						</span>
 					</div>
 
-				}
-				else
-				{
-					<div class="cl2 hov-cl1 trans-04 p-l-22 p-r-11">
-						<a href="/login" class="cl2 hov-cl1 trans-04">
-							Đăng nhập
-						</a>
-						<span>/</span>
-						<a href="/register" class="cl2 hov-cl1 trans-04">
-							Đăng ký
-						</a>
-					</div>
-				}
 			</div>
 		</div>
 
-		<!-- Menu Mobile -->
-		<div class="menu-mobile">
-			<ul class="main-menu-m">
-				<li>
-					<a href="/customer/profile"><i class="zmdi zmdi-account icon-header-item cl0"></i></a>
-					<ul class="sub-menu-m">
-						<li><a href="/customer/profile">Tài khoản của tôi</a></li>
-						<li><a href="/customer/history-order">Lịch sử đơn hàng</a></li>
-						<li><a href="/customer/change-password">Đổi mật khẩu</a></li>
-						<li><a href="/logout">Đăng xuất</a></li>
-					</ul>
-					<span class="arrow-main-menu-m">
-						<i class="fa fa-angle-right" aria-hidden="true"></i>
-					</span>
-				</li>
+		@if (ViewBag.IsLoggedIn != null && (bool)ViewBag.IsLoggedIn == true && ViewBag.RoleName == Constants.Role_Name.CUSTOMER)
+		{
+			<!-- Menu Mobile -->
+			<div class="menu-mobile">
+				<ul class="main-menu-m">
+					<li>
+						<a href="/customer/profile"><i class="zmdi zmdi-account icon-header-item cl0"></i></a>
+						<ul class="sub-menu-m">
+							<li><a href="/customer/profile">Tài khoản của tôi</a></li>
+							<li><a href="/customer/history-order">Lịch sử đơn hàng</a></li>
+							<li><a href="/customer/change-password">Đổi mật khẩu</a></li>
+							<li><a href="/logout">Đăng xuất</a></li>
+						</ul>
+						<span class="arrow-main-menu-m">
+							<i class="fa fa-angle-right" aria-hidden="true"></i>
+						</span>
+					</li>
 
-				<li>
-					<a href="/">Trang chủ</a>
-				</li>
-				<li>
-					<a href="/shop" class="label1 rs1" data-label1="hot">Cửa hàng</a>
-				</li>
+					<li>
+						<a href="/">Trang chủ</a>
+					</li>
+					<li>
+						<a href="/shop" class="label1 rs1" data-label1="hot">Cửa hàng</a>
+					</li>
 
-			</ul>
-		</div>
+				</ul>
+			</div>
+		}
+		else
+		{
+			<!-- Menu Mobile -->
+			<div class="menu-mobile">
+				<ul class="main-menu-m">
+					<li>
+						<a href="/login">
+							Đăng nhập
+						</a>
+						<span>/</span>
+						<a href="/register">
+							Đăng ký
+						</a>
+					</li>
+
+					<li>
+						<a href="/">Trang chủ</a>
+					</li>
+					<li>
+						<a href="/shop" class="label1 rs1" data-label1="hot">Cửa hàng</a>
+					</li>
+
+				</ul>
+			</div>
+		}
 	</header>
 
 	<div class="wrap-header-cart js-panel-cart">
@@ -225,7 +237,7 @@
 
 	<!-- Loading Popup Modal -->
 	<div id="loading-popup" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 9999;">
-		<div style="background: #ffffff; padding: 30px; border-radius: 10px; text-align: center;">
+		<div style="padding: 30px; border-radius: 10px; text-align: center;">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" style="width: 100px; height: 100px;">
 				<circle fill="#6C7AE0" stroke="#6C7AE0" stroke-width="15" r="15" cx="40" cy="100">
 					<animate attributeName="opacity" calcMode="spline" dur="2s" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4s"></animate>
@@ -240,18 +252,23 @@
 		</div>
 	</div>
 
+
+
 	<!-- Your main content goes here -->
 	<!-- Footer -->
-	<footer class="bg3 p-t-75 p-b-32 custom-rounded-small">
-		<div class="container rounded-4">
-			<div class="">
-				<p class="stext-107 cl6 txt-center">
-					Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="#">ashin</a></a>
-				</p>
+	@if (ViewBag.Title != "Crytal Eyes | Đơn hàng của bạn" && ViewBag.Title != "Crytal Eyes | Chi tiết đơn hàng")
+	{
+		<footer class="bg3 p-t-75 p-b-32 custom-rounded-small">
+			<div class="container rounded-4">
+				<div class="">
+					<p class="stext-107 cl6 txt-center">
+						Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="#">ashin</a>
+					</p>
+				</div>
 			</div>
-		</div>
-	</footer>
-
+		</footer>
+	}
+	
 
 	<!-- Back to top -->
 	<div class="btn-back-to-top" id="myBtn">

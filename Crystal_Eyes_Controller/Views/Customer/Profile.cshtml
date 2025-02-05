@@ -23,11 +23,11 @@
 		<div class="flex-w flex-tr justify-content-center" style="gap: 40px;">
 			<div class="size-150 bor10 p-lr-70 p-t-55 p-b-70 p-lr-15-lg w-full-md custom-rounded-s-small">
 					<div class="text-center m-b-20">
-						<img src="https://i.pinimg.com/236x/cd/cb/0c/cdcb0cb30bc700c53f12eff840156b29.jpg" alt="AVATAR" class="bor0" style="width: 100px;">
+						<img src="@ViewBag.User.Image" alt="AVATAR" class="bor0" style="width: 100px;">
 					</div>
 					<div class="text-center m-b-20">
 						<span class="mtext-110 cl2">
-							Name
+							@ViewBag.User.Name
 						</span>
 					</div>
 					<div class="flex-w w-full p-b-42">
@@ -41,7 +41,7 @@
 							</span>
 
 							<p class="stext-115 cl1 size-213 p-t-10">
-								+1 800 1236879
+							@ViewBag.User.Phone
 							</p>
 						</div>
 					</div>
@@ -56,7 +56,7 @@
 							</span>
 
 							<p class="stext-115 cl1 size-213 p-t-10">
-								contact@example.com
+								@ViewBag.Email
 							</p>
 						</div>
 					</div>
@@ -71,7 +71,7 @@
 							</span>
 
 							<p class="stext-115 cl6 size-213 p-t-10">
-								Trường Đại học FPT
+								@ViewBag.User.Address
 							</p>
 						</div>
 					</div>
@@ -85,22 +85,27 @@
 				</div>
 				<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
 					<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="name"
-						   placeholder="Tên người dùng" readonly>
+						   placeholder="Tên người dùng" value="@ViewBag.User.Name" readonly>
 					<span class="zmdi zmdi-account how-pos4 pointer-none"></span>
 				</div>
 				<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
+					<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="date" name="dob"
+						   placeholder="Sinh nhật" value="@ViewBag.User.Dob.ToString("yyyy-MM-dd")">
+					<span class="lnr lnr-clock how-pos4 pointer-none"></span>
+				</div>
+				<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
 					<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="phone"
-						   placeholder="Số điện thoại" readonly>
+						   placeholder="Số điện thoại" value="@ViewBag.User.Phone" readonly>
 					<span class="lnr lnr-phone-handset how-pos4 pointer-none"></span>
 				</div>
 				<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
 					<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="email" name="email"
-						   placeholder="Email" readonly>
+						   placeholder="Email" value="@ViewBag.Email" readonly>
 					<span class="lnr lnr-envelope how-pos4 pointer-none"></span>
 				</div>
 				<div class="bor8 m-b-20 how-pos4-parent custom-rounded-form">
 					<input class="stext-111 cl2 plh3 size-116 p-l-62 p-r-30" type="text" name="address"
-						   placeholder="Địa chỉ" readonly>
+						   placeholder="Địa chỉ" value="@ViewBag.User.Address" readonly>
 					<span class="lnr lnr-map-marker how-pos4 pointer-none"></span>
 				</div>
 				<div class="m-b-20 how-pos4-parent">
@@ -108,9 +113,9 @@
 						Lưu ý: bạn không thể thay đổi email.
 					</p>
 				</div>
-				<button class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
+				<a href="/customer/edit-profile" class="flex-c-m stext-101 cl0 size-121 bg3 bor1 hov-btn3 p-lr-15 trans-04 pointer">
 					Thay đổi thông tin
-				</button>
+				</a>
 			</div>
 		</div>
 	</div>

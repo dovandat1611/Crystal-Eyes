@@ -120,7 +120,7 @@ namespace Crystal_Eyes_Controller.Controllers
 			if (result.IsSuccess)
 			{
 				TempData["MessageSuccess"] = result.Message;
-				return RedirectToAction("Login", "Home");
+				return RedirectToAction("Login", "Authentication");
 			}
 
 			ModelState.AddModelError("RegisterFail", result.Message);
@@ -172,7 +172,7 @@ namespace Crystal_Eyes_Controller.Controllers
 			);
 
 			TempData["Email"] = email;
-			return RedirectToAction("OTP", "Home");
+			return RedirectToAction("OTP", "Authentication");
 		}
 
 
@@ -223,7 +223,7 @@ namespace Crystal_Eyes_Controller.Controllers
 			await _unitOfWork.SaveChangesAsync();
 
 			TempData["Email"] = email;
-			return RedirectToAction("ResetPassword", "Home");
+			return RedirectToAction("ResetPassword", "Authentication");
 		}
 
 
@@ -264,7 +264,7 @@ namespace Crystal_Eyes_Controller.Controllers
 			await _unitOfWork.SaveChangesAsync();
 
 			TempData["MessageSuccess"] = "Mật khẩu đã được đặt lại thành công!";
-			return RedirectToAction("Login", "Home");
+			return RedirectToAction("Login", "Authentication");
 		}
 	}
 }

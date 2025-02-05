@@ -38,51 +38,95 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td>Ashin</td>
-										<td>
-											<a href="tel:1234">012345</a>
-										</td>
-										<td>Đại học FPT</td>
-										<td>300.00VNĐ</td>
-										<td>
-											<!-- <span class="text-danger bg-white bor1 p-all-5">
-												Hủy
-											</span>
-											<span class="text-info bg-white bor1 p-all-5">
-												Đang chuẩn bị hàng
-											</span>
-											<span class="text-warning bg-white bor1 p-all-5">
-												Đang vận chuyển
-											</span> -->
-											<span class="text-success bg-white bor1 p-all-5">
-												Thành công
-											</span>
-										</td>
-										<td>
-											<button class="flex-c-m   cl0 bg1 bor1 hov-btn1  p-all-5 trans-04">
-												Xem chi tiết
-											</button>
-										</td>
-									</tr>
+									@foreach (var item in ViewBag.Orders as PaginatedList<Order>)
+									{
+										<tr>
+											<td>@item.NameReceiver</td>
+											<td>
+												<a href="tel:1234">@item.PhoneReceiver</a>
+											</td>
+											<td>@item.AddressReceiver</td>
+											<td class="formatprice">@item.TotalAmount</td>
+											<td>
+												@if (item.OrderStatus == "Cancelled")
+												{
+													<span class="text-danger bg-white bor1 p-all-5">
+														Hủy
+													</span>
+												}
+
+												@if (item.OrderStatus == "Pending")
+												{
+													<span class="text-info bg-white bor1 p-all-5">
+														Đang chuẩn bị hàng
+													</span>
+												}
+
+												@if (item.OrderStatus == "Shipping")
+												{
+													<span class="text-warning bg-white bor1 p-all-5">
+														Đang vận chuyển
+													</span>
+												}
+
+												@if (item.OrderStatus == "Success")
+												{
+													<span class="text-success bg-white bor1 p-all-5">
+														Thành công
+													</span>
+												}
+											</td>
+											<td>
+												<a href="/customer/order-detail/@item.OrderId" class="flex-c-m   cl0 bg1 bor1 hov-btn1  p-all-5 trans-04">
+													Xem chi tiết
+												</a>
+											</td>
+										</tr>
+									}
 								</tbody>
 							</table>
 
 							<div class="flex-l-m flex-w w-full p-t-10 m-lr--7 justify-content-center">
-								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
-									<i class="zmdi zmdi-arrow-left"></i>
-								</a>
-								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
-									1
-								</a>
+								<!-- Left Arrow for Previous Page -->
+								@if (ViewBag.Orders.HasPreviousPage)
+								{
+									<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@ViewBag.Color&pageIndex=@(ViewBag.Orders.PageIndex - 1)"
+									   class="flex-c-m how-pagination1 trans-04 m-all-7">
+										<i class="zmdi zmdi-arrow-left"></i>
+									</a>
+								}
+								else
+								{
+									<span class="flex-c-m how-pagination1 trans-04 m-all-7">
+										<i class="zmdi zmdi-arrow-left"></i>
+									</span>
+								}
 
-								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
-									2
-								</a>
-								<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
-									<i class="zmdi zmdi-arrow-right"></i>
-								</a>
+								<!-- Page Numbers -->
+								@for (int i = 1; i <= ViewBag.Orders.TotalPages; i++)
+								{
+									<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@ViewBag.Color&pageIndex=@i"
+									   class="flex-c-m how-pagination1 trans-04 m-all-7 @(i == ViewBag.Orders.PageIndex ? "active-pagination1" : "")">
+										@i
+									</a>
+								}
+
+								<!-- Right Arrow for Next Page -->
+								@if (ViewBag.Orders.HasNextPage)
+								{
+									<a href="?category=@ViewBag.SearchCategory&menu=@ViewBag.Menu&price=@ViewBag.Price&sort=@ViewBag.Sort&color=@ViewBag.Color&pageIndex=@(ViewBag.Orders.PageIndex + 1)"
+									   class="flex-c-m how-pagination1 trans-04 m-all-7">
+										<i class="zmdi zmdi-arrow-right"></i>
+									</a>
+								}
+								else
+								{
+									<span class="flex-c-m how-pagination1 trans-04 m-all-7">
+										<i class="zmdi zmdi-arrow-right"></i>
+									</span>
+								}
 							</div>
+
 
 						</div>
 					</div>

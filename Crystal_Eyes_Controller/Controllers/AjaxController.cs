@@ -41,44 +41,5 @@ namespace Crystal_Eyes_Controller.Controllers
 			return Json(productsDto);
 		}
 
-
-
-		//[HttpGet("wish-list-process/{productId}/{userId}")]
-		//public async Task<IActionResult> WishlistProcess(int productId, int userId)
-		//{	
-		//	var queryAble = await _unitOfWork.Wishlist.Queryable()
-		//		.Where(x => x.ProductId == productId && x.UserId == userId).FirstOrDefaultAsync();
-
-		//	string message = "Thực hiện không thành công";
-		//	string action = string.Empty;
-		//	if(queryAble != null)
-		//	{
-		//		var isDelete = await _unitOfWork.Wishlist.DeleteAsync(queryAble.WishlistId);
-		//		if(isDelete == true)
-		//		{
-		//			message = "Xóa thành công sản phẩm ra khỏi Yêu Thích";
-		//			action = "Delete";
-		//		}
-		//	}
-
-		//	if (queryAble == null)
-		//	{
-		//		var wishList = new Wishlist()
-		//		{
-		//			ProductId = productId,
-		//			UserId = userId
-		//		};
-
-		//		var isCreate = await _unitOfWork.Wishlist.CreateAsync(wishList);
-		//		if (isCreate == true)
-		//		{
-		//			message = "Thêm thành công sản phẩm vào Yêu Thích";
-		//			action = "Create";
-		//		}
-		//	}
-		//	var totalWishlist = await _unitOfWork.Wishlist.Queryable().CountAsync(x => x.UserId == userId);
-		//	return Json(new { message, action, totalWishlist});
-		//}
-
 	}
 }
